@@ -30,13 +30,16 @@ class RegexManager {
      */
     public loadConfig() {
         // TODO PLACEHOLDER CODE, waiting on final schema of user settings to be decided!
-        this.regexes = [ { name: "email", regex: /(?<=\s|^)\w+@\w+\.\w+/g } ];
+        this.regexes = [ { name: "EMAIL", regex: /(?<=\s|^)\w+@\w+\.\w+/g } ];
     }
 
     /**
-     * 
-     * @param token 
-     * @param name 
+     * Check if a token matches with a named regular expression pattern,
+     * such as email, URL, IP, etc. Meant to be used when checking if a token
+     * can be called by an API.
+     * @param token The text token to be matched.
+     * @param name The name of the type of matching, URL, EMAIL, etc...
+     * @returns True if passed token is matched, false otherwise.
      */
     public matchToken(token: string, name: string) {
         this.regexes.forEach(element => {
