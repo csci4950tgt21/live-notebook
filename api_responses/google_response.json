@@ -1,0 +1,37 @@
+URL = https://safebrowsing.googleapis.com/v4/threatMatches:find?key=ENTER_API_KEY_HERE
+
+Request Type = POST
+
+
+FOR URL 
+
+{
+	"threatInfo": {
+		"threatTypes":      ["UNWANTED_SOFTWARE", "MALWARE","THREAT_TYPE_UNSPECIFIED","SOCIAL_ENGINEERING","POTENTIALLY_HARMFUL_APPLICATION"],
+		"platformTypes":    ["ANY_PLATFORM"],
+		"threatEntryTypes": ["URL"],
+		"threatEntries": [
+			{"url": "http://testsafebrowsing.appspot.com/apiv4/ANY_PLATFORM/MALWARE/URL/"}
+		]
+	}
+}
+
+Empty 200 response means clean
+
+
+Reponse type
+
+{
+    "matches": [
+        {
+            "threatType": "MALWARE",
+            "platformType": "ANY_PLATFORM",
+            "threat": {
+                "url": "http://testsafebrowsing.appspot.com/apiv4/ANY_PLATFORM/MALWARE/URL/"
+            },
+            "cacheDuration": "300s",
+            "threatEntryType": "URL"
+        }
+    ]
+}
+
