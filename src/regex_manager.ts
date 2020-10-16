@@ -67,7 +67,7 @@ export class RegexManager {
                 newRegex+="|";
             }
             i++;
-            //regex.source will remove the surrounding // from the regex
+            // regex.source will remove the surrounding // from the regex
             newRegex += element.regex.source;
         });
         // When finished, add the last / to the new regex,
