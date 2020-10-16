@@ -42,7 +42,7 @@ export class RegexManager {
      * such as email, URL, IP, etc. Meant to be used when checking if a token
      * can be called by an API.
      * @param token The text token to be matched.
-     * @returns True if passed token is matched, false otherwise.
+     * @returns The type of token if matched, undefined otherwise.
      */
     public matchToken(token: string) {
         this.regexes.forEach(element => {
@@ -50,7 +50,7 @@ export class RegexManager {
                 return element.name;
             }
         });
-        return false;
+        return undefined;
     }
 
     /**
