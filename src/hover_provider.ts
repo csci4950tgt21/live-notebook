@@ -25,7 +25,7 @@ class NotebookHoverProvider implements vscode.HoverProvider {
                 var response = "Type: " + type;
 
                 if (type == "URL"){
-                    response = this.apiCalls.getURLdata(stringOfInterest);
+                    response = this.apiCalls.getURLdata(stringOfInterest) ?? "undefined";
                 }
 
                 if (type == "IP"){

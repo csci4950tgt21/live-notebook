@@ -23,10 +23,28 @@ export class APICalls {
         }
     }
 
-    public getURLdata(url: string) : string {
+    public getURLdata(url: string) : string | undefined {
         let cacheHit = this.cachedResultsURL.get(url) ?? "undefined";
         if (cacheHit == "undefined"){
-            return "API IP CALL";
+            let api_url = 'https://safebrowsing.googleapis.com/v4/threatMatches:find?key=' + 'AIzaSyBRDZ9lG8dZog5Jg5RvpeoSJMtq5pyaD-4';
+            let params = {
+                "threatInfo": {
+                    "threatTypes":      ["UNWANTED_SOFTWARE", "MALWARE","THREAT_TYPE_UNSPECIFIED","SOCIAL_ENGINEERING","POTENTIALLY_HARMFUL_APPLICATION"],
+                    "platformTypes":    ["ANY_PLATFORM"],
+                    "threatEntryTypes": ["URL"],
+                    "threatEntries": [
+                        {"url": url}
+                    ]
+                }
+            }
+            return axios.post(api_url,params).then(
+                (resp: any) => {
+                if(resp.data.matches){
+                    return JSON.stringify(resp.data.matches);
+                }
+                return "URL Not found in Database"
+                }
+            )
         }
         else{
             console.log("CACHE HIT");
