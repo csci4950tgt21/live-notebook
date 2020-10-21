@@ -11,25 +11,25 @@ class NotebookHoverProvider implements vscode.HoverProvider {
         this.apiCalls = apiCalls;
     }
 
-    provideHover(doc: vscode.TextDocument, pos: vscode.Position, tok: vscode.CancellationToken) : vscode.ProviderResult<vscode.Hover> {
-        
-        var matchRange: vscode.Range | undefined = doc.getWordRangeAtPosition(pos, /\S+/); 
+    provideHover(doc: vscode.TextDocument, pos: vscode.Position, tok: vscode.CancellationToken): vscode.ProviderResult<vscode.Hover> {
+
+        var matchRange: vscode.Range | undefined = doc.getWordRangeAtPosition(pos, /\S+/);
         // Does not match spaces in the middle of tokens
-        
+
         if (matchRange !== undefined) {
             var stringOfInterest: string = doc.getText(matchRange);
             var getResult: Promise<string> = new Promise((resolve, _) => {
                 var type: string | undefined = this.regexManager.matchToken(stringOfInterest);
-                
+
                 console.log(type + " " + stringOfInterest);
                 var response = "Type: " + type;
 
-                if (type == "URL"){
+                if (type == "URL") {
                     response = this.apiCalls.getURLdata(stringOfInterest) ?? "undefined";
                 }
 
-                if (type == "IP"){
-                    response = this.apiCalls.getIPdata(stringOfInterest);
+                if (type == "IP") {
+                    response = this.apiCalls.getIPdata(stringOfInterest) ?? "undefined";
                 }
 
                 resolve(response);
