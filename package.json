@@ -14,7 +14,85 @@
 	],
 	"main": "./out/extension.js",
 	"contributes": {
-		"commands": []
+		"commands": [
+			{
+				"command": "live-notebook.helloWorld",
+				"title": "Hello World"
+			}
+		],
+		"configuration": {
+			"type": "object",
+			"title": "Live Notebook",
+			"properties": {
+				"live-notebook.regexes": {
+					"type": "array",
+					"order": 0,
+					"default": [
+						{
+							"type": "URL",
+							"regex": "(?<=\\s|^)(https?:\/\/)?(www\\.)?[a-z0-9]+([\\-\\.]{1}[a-z0-9]+)*\\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?(?=\\s|$)"
+						},
+						{
+							"type": "IP",
+							"regex": "(?<=\\s|^)(\\d{1,3}\\.){3}\\d{1,3}(?=\\s|$)|(?<=\\s|^)(\\w{1,4}\\:){7}\\w{1,4}(?=\\s|$)|(?<=\\s|^)\\w{1,4}\\:(\\w{0,4}\\:){5}\\w{1,4}(?=\\s|$)"
+						},
+						{
+							"type": "EMAIL",
+							"regex": "(?<=\\s|^)[a-z0-9\\-\\.\\+]+@[a-z0-9\\-]+\\.[a-z0-9]+(?=\\s|$)"
+						}
+					],
+					"scope": "application",
+					"description": "Strings of Interest (Regular Expressions)"
+				},
+				"live-notebook.apis": {
+					"type": "array",
+					"order": 1,
+					"default": [
+						{
+							"url": "https://safebrowsing.googleapis.com/v4/threatMatches:find",
+							"method": "POST",
+							"type": [
+								"URL"
+							],
+							"query": {
+								"key": "{API_KEY_HERE}"
+							},
+							"request": {
+								"threatInfo": {
+									"threatTypes": [
+										"UNWANTED_SOFTWARE",
+										"MALWARE",
+										"THREAT_TYPE_UNSPECIFIED",
+										"SOCIAL_ENGINEERING",
+										"POTENTIALLY_HARMFUL_APPLICATION"
+									],
+									"platformTypes": [
+										"ANY_PLATFORM"
+									],
+									"threatEntryTypes": [
+										"URL"
+									],
+									"threatEntries": [
+										{
+											"url": "{live-notebook.stringOfInterest}"
+										}
+									]
+								}
+							}
+						},
+						{
+							"url": "https://www.virustotal.com/api/v3/ip_addresses/{live-notebook.stringOfInterest}",
+							"method": "GET",
+							"type": [
+								"IP"
+							]
+						}
+					],
+					"scope": "application",
+					"description": "APIs for Types of Strings"
+				}
+			}
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
