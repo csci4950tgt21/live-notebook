@@ -20,15 +20,15 @@ class NotebookHoverProvider implements vscode.HoverProvider {
             var stringOfInterest: string = doc.getText(matchRange);
             var type: string | undefined = this.regexManager.matchToken(stringOfInterest);
 
-            var response = "";
+            var response: Promise<any> = Promise.resolve();
             if (type == "URL") {
-                response = this.apiCalls.getURLdata(stringOfInterest) ?? "undefined";
+                response = this.apiCalls.getURLdata(stringOfInterest);
             }
             else if (type == "IP") {
-                response = this.apiCalls.getIPdata(stringOfInterest) ?? "undefined";
+                response = this.apiCalls.getIPdata(stringOfInterest);
             }
 
-            return new vscode.Hover(new vscode.MarkdownString(response));
+            return response.then((value) => { return new vscode.Hover(new vscode.MarkdownString(value)); });
         }
         return null;
     }
