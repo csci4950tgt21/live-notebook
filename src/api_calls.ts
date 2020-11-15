@@ -18,12 +18,15 @@ export type CommonDataModel = {
         malicious?: number,
     },
     whois?: string,
-    "links.self"?: string,
+    "link.self"?: string,
     type?: string,
     harmful?: string | boolean,
 }
 
-// TODO: Add Response type
+export type Response = {
+    status : number,
+    data : CommonDataModel
+}
 
 export class APICalls {
 
