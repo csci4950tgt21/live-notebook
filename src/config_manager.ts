@@ -58,7 +58,7 @@ export class ConfigManager {
         let apiArray : any = vscode.workspace.getConfiguration('live-notebook').get('apis');
 
         // Create a new array of api strategies
-        let strategies = new Array<APIStrategy>(apiArray.lenth);
+        let strategies = new Array<APIStrategy>(apiArray.length);
         for (let i = 0; i < strategies.length; i++) {
             switch (apiArray[i].method) {
                 case "POST":
