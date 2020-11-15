@@ -23,6 +23,8 @@ type CommonDataModel = {
     "harmful" : string | boolean | undefined,
 }
 
+// TODO: Add Response type
+
 export class APICalls {
 
     private cachedResultsIP: Map<string, string>;

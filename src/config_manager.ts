@@ -35,6 +35,6 @@ export class ConfigManager {
         return regexArray;
     }
 
-    // TODO API config accessing code
+    // TODO: API config accessing code
 }
 export default ConfigManager;
