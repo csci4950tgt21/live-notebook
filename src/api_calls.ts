@@ -2,6 +2,27 @@ import APIKEYS from "./apiKEYS";
 
 const axios = require('axios').default;
 
+type CommonDataModel = {
+    "last_modification_date" : number | string | undefined,
+    "last_analysis_stats" : {
+        "harmless" : number | undefined,
+        "malicious": number | undefined,
+        "suspicious": number | undefined,
+        "timeout": number | undefined,
+        "undetected": number | undefined,
+    } | undefined,
+    "reputation" : number | undefined,
+    "tags" : Array<string> | undefined,
+    "total_votes" : {
+        "harmless" : number | undefined,
+        "malicious": number | undefined,
+    } | undefined,
+    "whois" : string | undefined,
+    "links.self" : string | undefined,
+    "type" : string | undefined,
+    "harmful" : string | boolean | undefined,
+}
+
 export class APICalls {
 
     private cachedResultsIP: Map<string, string>;
