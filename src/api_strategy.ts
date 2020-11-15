@@ -19,6 +19,13 @@ export abstract class APIStrategy {
         return this.mapResponseToCDM(this.getReponse(token));
     }
 
+    /**
+     * @returns The type of tokens accepted, URL, IP, etc...
+     */
+    public getTokenType(): string[] {
+        return this.apiJSON.type;
+    }
+
     // TODO
     protected abstract getReponse(token: string): JSON | undefined;
 

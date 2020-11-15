@@ -1,4 +1,16 @@
 import * as vscode from 'vscode';
+import { APIStrategy } from './api_strategy';
+import { GetStrategy } from './get_strategy';
+import { PostStrategy } from './post_strategy';
+
+/**
+ * The TypedRegex type holds both a regular expression, and the type
+ * of the regular expression, such as "URL" or "EMAIL".
+ */
+export type TypedRegex = {
+    type: string;
+    regex: RegExp;
+};
 
 /**
  * The config manager class manages
@@ -32,9 +44,31 @@ export class ConfigManager {
         for (let i = 0; i < regexArray.length; i++) {
             regexes[i] = {type: regexArray[i].type, regex: regexArray[i].regex};
         }
-        return regexArray;
+        return regexes;
     }
 
-    // TODO: API config accessing code
+    /**
+     * Access the config file in package.json
+     * and load in the APIs as their respective calling
+     * strategies/methods.
+     * @returns An array of API strategies
+     */
+    public getAPIStrategies() {
+        // Access the configuration
+        let apiArray : any = vscode.workspace.getConfiguration('live-notebook').get('apis');
+
+        // Create a new array of api strategies
+        let strategies = new Array<APIStrategy>(apiArray.lenth);
+        for (let i = 0; i < strategies.length; i++) {
+            switch (apiArray[i].method) {
+                case "POST":
+                    strategies[i] = new PostStrategy(apiArray[i]);
+                    break;
+                case "GET":
+                    strategies[i] = new GetStrategy(apiArray[i]);
+                    break;
+            }
+        }
+    }
 }
 export default ConfigManager;
