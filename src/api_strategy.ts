@@ -18,10 +18,7 @@ export abstract class APIStrategy {
     }
 
     // TODO
-    private getReponse(token : string) : JSON | undefined {
-        // TODO
-        return undefined;
-    }
+    protected abstract getReponse(token : string) : JSON | undefined;
 
     // TODO
     private static mapResponseToCDM(reponse : JSON | undefined) {
