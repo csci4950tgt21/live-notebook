@@ -2,25 +2,25 @@ import APIKEYS from "./apiKEYS";
 
 const axios = require('axios').default;
 
-type CommonDataModel = {
-    "last_modification_date" : number | string | undefined,
-    "last_analysis_stats" : {
-        "harmless" : number | undefined,
-        "malicious": number | undefined,
-        "suspicious": number | undefined,
-        "timeout": number | undefined,
-        "undetected": number | undefined,
-    } | undefined,
-    "reputation" : number | undefined,
-    "tags" : Array<string> | undefined,
-    "total_votes" : {
-        "harmless" : number | undefined,
-        "malicious": number | undefined,
-    } | undefined,
-    "whois" : string | undefined,
-    "links.self" : string | undefined,
-    "type" : string | undefined,
-    "harmful" : string | boolean | undefined,
+export type CommonDataModel = {
+    last_modification_date?: number | string,
+    last_analysis_stats?: {
+        harmless?: number,
+        malicious?: number,
+        suspicious?: number,
+        timeout?: number,
+        undetected?: number,
+    },
+    reputation?: number,
+    tags?: Array<string>,
+    total_votes?: {
+        harmless?: number,
+        malicious?: number,
+    },
+    whois?: string,
+    "links.self"?: string,
+    type?: string,
+    harmful?: string | boolean,
 }
 
 // TODO: Add Response type
