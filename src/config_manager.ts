@@ -69,6 +69,7 @@ export class ConfigManager {
                     break;
             }
         }
+        return strategies;
     }
 }
 export default ConfigManager;
