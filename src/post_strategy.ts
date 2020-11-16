@@ -4,8 +4,8 @@ import { APIStrategy } from "./api_strategy";
  * The API Strategy for post calls
  */
 export class PostStrategy extends APIStrategy {
-    getRawReponse(token: string): JSON | undefined {
+    getRawResponse(token: string) {
         // TODO POST SPECIFIC CODE
-        return undefined;
+        return Promise.reject(undefined);
     }
 }

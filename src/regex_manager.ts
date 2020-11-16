@@ -1,5 +1,6 @@
+import { type } from 'os';
 import * as vscode from 'vscode';
-import ConfigManager from './config_manager';
+import { TypedRegex, ConfigManager } from './config_manager';
 
 /**
  * The regex manager is meant to manage all regular expressions
@@ -32,7 +33,7 @@ export class RegexManager {
      * @param token The text token to be matched.
      * @returns The type of token if matched, undefined otherwise.
      */
-    public matchToken(token: string) : string | undefined {
+    public matchToken(token: string): string | undefined {
         for (let i = 0; i < this.regexes.length; i++) {
             if (token.match(this.regexes[i].regex)) {
                 return this.regexes[i].type;
@@ -45,14 +46,14 @@ export class RegexManager {
      * The concatenated regular expression consisting of all
      * regular expressions in the configuration file.
      */
-    public concatRegex() : RegExp {
+    public concatRegex(): RegExp {
         var newRegex: string = "/";
         var i = 0;
         var end = this.regexes.length;
         this.regexes.forEach(element => {
             // Add in the | character between each regex
             if (i !== 0 && i < end) {
-                newRegex+="|";
+                newRegex += "|";
             }
             i++;
             // regex.source will remove the surrounding // from the regex

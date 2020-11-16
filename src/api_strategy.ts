@@ -7,7 +7,7 @@ export abstract class APIStrategy {
     // The JSON for the API
     private apiJSON: any;
 
-    constructor(apiJSON: JSON) {
+    constructor(apiJSON: any) {
         this.apiJSON = apiJSON;
     }
 
@@ -15,8 +15,8 @@ export abstract class APIStrategy {
      * Get the common data model response
      * @param token The parsed text token, for example a URL.
      */
-    public getResponse(token: string): CommonDataModel {
-        return this.asCommonDataModel(this.getRawReponse(token));
+    public async getResponse(token: string): Promise<CommonDataModel> {
+        return this.asCommonDataModel(await this.getRawResponse(token));
     }
 
     /**
@@ -27,7 +27,7 @@ export abstract class APIStrategy {
     }
 
     // TODO
-    protected abstract getRawReponse(token: string): JSON | undefined;
+    protected abstract async getRawResponse(token: string): Promise<any>;
 
     // TODO: Error Checking,
     private normalize(mapping: object | string, response: object | string): object | string {
@@ -39,7 +39,6 @@ export abstract class APIStrategy {
                 normalized[k] = this.normalize(v, response);
             return normalized;
         }
-
     }
 
     private asCommonDataModel(response: JSON | undefined): CommonDataModel {

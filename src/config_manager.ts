@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { APIStrategy } from './api_strategy';
 import { GetStrategy } from './get_strategy';
 import { PostStrategy } from './post_strategy';
+import VirusTotalStrategy from './virus_total_strategy';
 
 /**
  * The TypedRegex type holds both a regular expression, and the type
@@ -24,9 +25,13 @@ export class ConfigManager {
     /**
      * @returns The singleton instance of ConfigManager
      */
-    public static getConfigManager () {
+    public static getConfigManager() {
         if (!ConfigManager.myConfigManager) ConfigManager.myConfigManager = new ConfigManager();
         return ConfigManager.myConfigManager;
+    }
+
+    public getVirusTotalKey() {
+        return vscode.workspace.getConfiguration('live-notebook').get('virustotal_api_key');
     }
 
     /**
@@ -36,13 +41,13 @@ export class ConfigManager {
      */
     public getTypedRegexes() {
         // Access the configuration
-        let regexArray : any = vscode.workspace.getConfiguration('live-notebook').get('regexes');
+        let regexArray: any = vscode.workspace.getConfiguration('live-notebook').get('regexes');
 
         // Create a new array of typed regular expressions,
         // and assign them to the configuration values
         let regexes = new Array<TypedRegex>(regexArray.length);
         for (let i = 0; i < regexArray.length; i++) {
-            regexes[i] = {type: regexArray[i].type, regex: regexArray[i].regex};
+            regexes[i] = { type: regexArray[i].type, regex: regexArray[i].regex };
         }
         return regexes;
     }
@@ -55,7 +60,7 @@ export class ConfigManager {
      */
     public getAPIStrategies() {
         // Access the configuration
-        let apiArray : any = vscode.workspace.getConfiguration('live-notebook').get('apis');
+        let apiArray: any = vscode.workspace.getConfiguration('live-notebook').get('apis');
 
         // Create a new array of api strategies
         let strategies = new Array<APIStrategy>(apiArray.length);
@@ -66,6 +71,9 @@ export class ConfigManager {
                     break;
                 case "GET":
                     strategies[i] = new GetStrategy(apiArray[i]);
+                    break;
+                case "VirusTotal":
+                    strategies[i] = new VirusTotalStrategy(apiArray[i]);
                     break;
             }
         }

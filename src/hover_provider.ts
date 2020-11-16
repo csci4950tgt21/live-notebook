@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { RegexManager } from "./regex_manager";
-import { APICalls } from "./api_calls";
+import { APICalls, CommonDataModel } from "./api_calls";
 
 class NotebookHoverProvider implements vscode.HoverProvider {
     regexManager: RegexManager;
@@ -17,20 +17,16 @@ class NotebookHoverProvider implements vscode.HoverProvider {
         // Does not match spaces in the middle of tokens
 
         if (matchRange !== undefined) {
-            var stringOfInterest: string = doc.getText(matchRange);
-            var type: string | undefined = this.regexManager.matchToken(stringOfInterest);
-
-            var response = "";
-            if (type == "URL") {
-                response = this.apiCalls.getURLdata(stringOfInterest) ?? "undefined";
-            }
-            else if (type == "IP") {
-                response = this.apiCalls.getIPdata(stringOfInterest) ?? "undefined";
-            }
-
-            return new vscode.Hover(new vscode.MarkdownString(response));
+            var token: string = doc.getText(matchRange);
+            var type: string | undefined = this.regexManager.matchToken(token);
+            var response: Promise<CommonDataModel[]>;
+            if (type !== undefined) response = this.apiCalls.getResponse(type, token);
+            else return null;
+            return response.then((value) => {
+                return new vscode.Hover(new vscode.MarkdownString(
+                    JSON.stringify(value)));
+            });
         }
-        return null;
     }
 }
 
