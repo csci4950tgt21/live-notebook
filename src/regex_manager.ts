@@ -1,6 +1,15 @@
 import { type } from 'os';
 import * as vscode from 'vscode';
-import { TypedRegex, ConfigManager } from './config_manager';
+import { ConfigManager } from './config_manager';
+
+/**
+ * The TypedRegex type holds both a regular expression, and the type
+ * of the regular expression, such as "URL" or "EMAIL".
+ */
+export type TypedRegex = {
+    type: string;
+    regex: RegExp;
+};
 
 /**
  * The regex manager is meant to manage all regular expressions

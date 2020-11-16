@@ -5,15 +5,6 @@ import { PostStrategy } from './post_strategy';
 import VirusTotalStrategy from './virus_total_strategy';
 
 /**
- * The TypedRegex type holds both a regular expression, and the type
- * of the regular expression, such as "URL" or "EMAIL".
- */
-export type TypedRegex = {
-    type: string;
-    regex: RegExp;
-};
-
-/**
  * The config manager class manages
  * all access to and from the settings/configuration.
  * The configuration can be found in package.json.
@@ -42,14 +33,7 @@ export class ConfigManager {
     public getTypedRegexes() {
         // Access the configuration
         let regexArray: any = vscode.workspace.getConfiguration('live-notebook').get('regexes');
-
-        // Create a new array of typed regular expressions,
-        // and assign them to the configuration values
-        let regexes = new Array<TypedRegex>(regexArray.length);
-        for (let i = 0; i < regexArray.length; i++) {
-            regexes[i] = { type: regexArray[i].type, regex: regexArray[i].regex };
-        }
-        return regexes;
+        return regexArray;
     }
 
     /**
