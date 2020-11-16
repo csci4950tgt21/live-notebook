@@ -22,7 +22,7 @@ export abstract class APIStrategy {
     /**
      * @returns The type of tokens accepted, URL, IP, etc...
      */
-    public getTokenType(): string[] {
+    public getTokenTypes(): string[] {
         return this.apiJSON.type;
     }
 

@@ -3,6 +3,7 @@ import APIKEYS from "./apiKEYS";
 const axios = require('axios').default;
 
 export type CommonDataModel = {
+    api_name: string,
     last_modification_date?: number | string,
     last_analysis_stats?: {
         harmless?: number,
@@ -18,14 +19,14 @@ export type CommonDataModel = {
         malicious?: number,
     },
     whois?: string,
-    "link.self"?: string,
+    link_self?: string,
     type?: string,
     harmful?: string | boolean,
 }
 
 export type Response = {
-    status : number,
-    data : CommonDataModel
+    status: number,
+    data: CommonDataModel
 }
 
 export class APICalls {

@@ -49,6 +49,7 @@
 					"order": 1,
 					"default": [
 						{
+							"name": "Google Safe Browsing",
 							"url": "https://safebrowsing.googleapis.com/v4/threatMatches:find",
 							"method": "POST",
 							"type": [
@@ -78,9 +79,14 @@
 										}
 									]
 								}
+							},
+							"mapping": {
+								"link_self": "matches.0.threat.url",
+								"type": "matches.0.threatEntryType"
 							}
 						},
 						{
+							"name": "VirusTotal IP",
 							"url": "https://www.virustotal.com/api/v3/ip_addresses/{live-notebook.stringOfInterest}",
 							"method": "GET",
 							"type": [
