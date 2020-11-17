@@ -1,13 +1,13 @@
 import * as vscode from 'vscode';
-import { RegexManager } from "./regex_manager";
+import { TokenMatcher } from "./token_matcher";
 import { APICalls, CommonDataModel } from "./api_calls";
 
 class NotebookHoverProvider implements vscode.HoverProvider {
-    regexManager: RegexManager;
+    tokenMatcher: TokenMatcher;
     apiCalls: APICalls;
 
-    constructor(regexManager: RegexManager, apiCalls: APICalls) {
-        this.regexManager = regexManager;
+    constructor(tokenMatcher: TokenMatcher, apiCalls: APICalls) {
+        this.tokenMatcher = tokenMatcher;
         this.apiCalls = apiCalls;
     }
 
@@ -18,7 +18,7 @@ class NotebookHoverProvider implements vscode.HoverProvider {
 
         if (matchRange !== undefined) {
             var token: string = doc.getText(matchRange);
-            var type: string | undefined = this.regexManager.matchToken(token);
+            var type: string | undefined = this.tokenMatcher.matchToken(token);
             var response: Promise<CommonDataModel[]>;
             if (type !== undefined) response = this.apiCalls.getResponse(type, token);
             else return null;

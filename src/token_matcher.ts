@@ -12,12 +12,12 @@ export type TypedRegex = {
 };
 
 /**
- * The regex manager is meant to manage all regular expressions
+ * The token matcher is meant to manage all regular expressions
  * used to identify types of strings, such as URL or email. It
  * loads regular expressions and their type in pairs from
  * the JSON settings file. (in package.json under "configuration")
  */
-export class RegexManager {
+export class TokenMatcher {
     // The array of regex and type pairs.
     private regexes: Array<TypedRegex> = [];
 
@@ -49,29 +49,6 @@ export class RegexManager {
             }
         }
         return undefined;
-    }
-
-    /**
-     * The concatenated regular expression consisting of all
-     * regular expressions in the configuration file.
-     */
-    public concatRegex(): RegExp {
-        var newRegex: string = "/";
-        var i = 0;
-        var end = this.regexes.length;
-        this.regexes.forEach(element => {
-            // Add in the | character between each regex
-            if (i !== 0 && i < end) {
-                newRegex += "|";
-            }
-            i++;
-            // regex.source will remove the surrounding // from the regex
-            newRegex += element.regex.source;
-        });
-        // When finished, add the last / to the new regex,
-        // if no regexes exist this will return //
-        newRegex += "/";
-        return new RegExp(newRegex);
     }
 }
 
