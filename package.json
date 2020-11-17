@@ -24,12 +24,6 @@
 			"type": "object",
 			"title": "Live Notebook",
 			"properties": {
-				"live-notebook.virustotal_api_key": {
-					"type": "string",
-					"order": 3,
-					"scope": "application",
-					"description": "API Key for VirusTotal"
-				},
 				"live-notebook.regexes": {
 					"type": "array",
 					"order": 0,
@@ -97,14 +91,25 @@
 							"method": "GET",
 							"type": [
 								"IP"
-							]
+							],
+							"query": {
+								"key": "{API_KEY_HERE}"
+							},
+							"mapping": {
+							}
 						},
 						{
 							"name": "VirusTotal URL",
+							"url": "https://www.virustotal.com/api/v3/urls",
 							"method": "VirusTotal",
 							"type": [
 								"URL"
-							]
+							],
+							"query": {
+								"key": "{API_KEY_HERE}"
+							},
+							"mapping": {
+							}
 						}
 					],
 					"scope": "application",

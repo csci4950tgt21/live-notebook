@@ -1,29 +1,33 @@
 import { APIStrategy } from "./api_strategy";
 import axios from 'axios';
-import ConfigManager from "./config_manager";
 const FormData = require('form-data');
 
+/**
+ * The VirusTotalStrategy is a special implementation
+ * specifically designed for the VirusTotal API, due to
+ * its unique calling method, which requires GET and POST
+ * calls.
+ */
 export default class VirusTotalStrategy extends APIStrategy {
-    // constructor() {
-    //     super({ name: "VirusTotal URL", type: ["URL"] });
-    // }
-
     protected async getRawResponse(token: string): Promise<any> {
-        let response = "";
-        let api_url = "https://www.virustotal.com/api/v3/urls";
-        var vt_key = ConfigManager.getConfigManager().getVirusTotalKey();
+        // Get values out of loaded config data
+        let api_url = this.apiJSON.url;
+        var vt_key = this.apiJSON.query.key;
+
+        // Check that the key is defined
         if (vt_key == undefined) return Promise.reject("VirusTotal API Key Undefined");
-        let post_resp = {
-            data: {
-                id: -1,
-            },
-        };
+
         var formData = new FormData();
         formData.append("url", token);
         let virus_total_header = {
             headers: {
                 ...formData.getHeaders(),
                 "x-apikey": vt_key, //the token is a variable which holds the token
+            },
+        };
+        let post_resp = {
+            data: {
+                id: -1,
             },
         };
         let resolve = async (resp: any) => {
@@ -34,12 +38,6 @@ export default class VirusTotalStrategy extends APIStrategy {
                 let new_api_url =
                     "https://www.virustotal.com/api/v3/analyses/" + url_id;
                 let resolve = (resp: any) => {
-                    // if (resp.data.data.attributes.status === "completed") {
-                    //     let stats = resp.data.data.attributes.stats;
-                    //     response =
-                    //         "### URL \n  #### JSON Payload \n\n " +
-                    //         JSON.stringify(stats);
-                    // }
                     return resp.data;
                 };
                 return await axios
@@ -50,9 +48,10 @@ export default class VirusTotalStrategy extends APIStrategy {
             }
         }
         return axios
-            .post(api_url, formData, virus_total_header).then(resolve, (err: any) => {
-                console.error(err);
-                return err.message;
+            .post(api_url, formData, virus_total_header)
+            .then(resolve, (err: any) => {
+            console.error(err);
+            return err.message;
             });
     }
 }

@@ -52,4 +52,4 @@ export class TokenMatcher {
     }
 }
 
-export default RegexManager;
+export default TokenMatcher;

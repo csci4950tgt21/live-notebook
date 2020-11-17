@@ -21,10 +21,6 @@ export class ConfigManager {
         return ConfigManager.myConfigManager;
     }
 
-    public getVirusTotalKey() {
-        return vscode.workspace.getConfiguration('live-notebook').get('virustotal_api_key');
-    }
-
     /**
      * Access the config file in package.json
      * and load in the regular expressions.

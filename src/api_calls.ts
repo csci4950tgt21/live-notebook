@@ -33,7 +33,6 @@ export type Response = {
 }
 
 export class APICalls {
-
     private cachedResults: Map<string, CommonDataModel[]>;
     private strategies: APIStrategy[];
 
@@ -42,54 +41,21 @@ export class APICalls {
         this.strategies = ConfigManager.getConfigManager().getAPIStrategies();
     }
 
+    /**
+     * getReponse will first check cache for tokens already identified,
+     * if cache hits exist it will return them without calling apis,
+     * otherwise it will then filter through strategies to get apis
+     * that can be called on the given type of token, and
+     * will then return a promise array of Common Data Model responses.
+     * @param type The type of token being passed, url, ip, etc...
+     * @param token The token being sent to the APIs
+     */
     public async getResponse(type: string, token: string): Promise<CommonDataModel[]> {
         var cached: CommonDataModel[] | undefined = this.cachedResults.get(token);
         if (cached !== undefined) return Promise.resolve(cached!);
         return Promise.all(this.strategies.filter((strategy) => type in strategy.getTokenTypes())
             .map(async function (strategy) { return await strategy.getResponse(token); }));
     }
-
-    // public getIPdata(ipaddress: string): string {
-    //     let cacheHit = this.cachedResultsIP.get(ipaddress);
-    //     if (cacheHit) {
-    //         console.log("CACHE HIT");
-    //         return cacheHit;
-    //     }
-    //     else {
-    //         return "### IP Address";
-    //     }
-    // }
-
-    // public getURLdata(url: string): string | undefined {
-    //     let cacheHit = this.cachedResultsURL.get(url);
-    //     if (cacheHit) {
-    //         console.log("Cache Hit");
-    //         return cacheHit;
-    //     }
-    //     else {
-    //         let api_url = 'https://safebrowsing.googleapis.com/v4/threatMatches:find?key=' + APIKEYS.getGoogleKey();
-    //         let params = {
-    //             "threatInfo": {
-    //                 "threatTypes": ["UNWANTED_SOFTWARE", "MALWARE", "THREAT_TYPE_UNSPECIFIED", "SOCIAL_ENGINEERING", "POTENTIALLY_HARMFUL_APPLICATION"],
-    //                 "platformTypes": ["ANY_PLATFORM"],
-    //                 "threatEntryTypes": ["URL"],
-    //                 "threatEntries": [
-    //                     { "url": url }
-    //                 ]
-    //             }
-    //         }
-    //         return axios.post(api_url, params).then(
-    //             (resp: any) => {
-    //                 let response = "URL Not found in Safe Browsing Database";
-    //                 if (resp.data.matches) {
-    //                     response = "### URL \n  #### JSON Payload \n\n " + JSON.stringify(resp.data.matches);
-    //                 }
-    //                 this.cachedResultsURL.set(url, response);
-    //                 return response
-    //             }
-    //         )
-    //     }
-    // }
 }
 
 export default APICalls;
