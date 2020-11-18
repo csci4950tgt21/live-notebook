@@ -106,7 +106,7 @@
 								"URL"
 							],
 							"query": {
-								"key": "61e44c0cd9049f50e8b4721d9d3b7eeb6d223c2874c6c3dc80a9537b50055f79"
+								"key": "{API_KEY_HERE}"
 							},
 							"mapping": {
 								"last_modification_date": "attributes.date",
