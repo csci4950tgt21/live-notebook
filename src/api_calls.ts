@@ -23,7 +23,7 @@ export type CommonDataModel = {
     whois?: string,
     link_self?: string,
     type?: string,
-    harmful?: string | boolean,
+    harmful?: string | boolean
 }
 
 export type Response = {

@@ -106,9 +106,28 @@
 								"URL"
 							],
 							"query": {
-								"key": "{API_KEY_HERE}"
+								"key": "61e44c0cd9049f50e8b4721d9d3b7eeb6d223c2874c6c3dc80a9537b50055f79"
 							},
-							"mapping": {}
+							"mapping": {
+								"last_modification_date": "attributes.date",
+								"last_analysis_stats": {
+									"harmless": "attributes.stats.harmless",
+									"malicious": "attributes.stats.malicious",
+									"suspicious": "attributes.stats.suspicious",
+									"timeout": "attributes.stats.timeout",
+									"undetected": "attributes.stats.undetected"
+								},
+								"reputation": "",
+								"tags": "",
+								"total_votes": {
+									"harmless": "attributes.stats.harmless",
+									"malicious": "attributes.stats.malicious"
+								},
+								"whois": "",
+								"link_self": "",
+								"type": "",
+								"harmful": ""
+							}
 						}
 					],
 					"scope": "application",
@@ -141,6 +160,7 @@
 	"dependencies": {
 		"axios": "^0.21.0",
 		"form-data": "^3.0.0",
+		"lodash": "^4.17.20",
 		"promise": "^8.1.0"
 	}
 }
