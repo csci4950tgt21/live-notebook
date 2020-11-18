@@ -33,12 +33,11 @@ export default class VirusTotalStrategy extends APIStrategy {
         let resolve = async (resp: any) => {
             post_resp.data = resp.data.data;
             let url_id = post_resp.data.id;
-            console.log(url_id);
+            // console.log(url_id);
             if (url_id != undefined) {
-                let new_api_url =
-                    "https://www.virustotal.com/api/v3/analyses/" + url_id;
+                let new_api_url = this.apiJSON.vturl2 + url_id;
                 let resolve = (resp: any) => {
-                    return resp.data;
+                    return resp.data.data;
                 };
                 return await axios
                     .get(new_api_url, virus_total_header)
@@ -48,8 +47,7 @@ export default class VirusTotalStrategy extends APIStrategy {
             }
         }
         return axios
-            .post(api_url, formData, virus_total_header)
-            .then(resolve, (err: any) => {
+            .post(api_url, formData, virus_total_header).then(resolve, (err: any) => {
             console.error(err);
             return err.message;
             });

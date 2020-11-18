@@ -95,12 +95,12 @@
 							"query": {
 								"key": "{API_KEY_HERE}"
 							},
-							"mapping": {
-							}
+							"mapping": {}
 						},
 						{
 							"name": "VirusTotal URL",
 							"url": "https://www.virustotal.com/api/v3/urls",
+							"vturl2": "https://www.virustotal.com/api/v3/analyses/",
 							"method": "VirusTotal",
 							"type": [
 								"URL"
@@ -108,8 +108,7 @@
 							"query": {
 								"key": "{API_KEY_HERE}"
 							},
-							"mapping": {
-							}
+							"mapping": {}
 						}
 					],
 					"scope": "application",

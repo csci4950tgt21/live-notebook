@@ -1,7 +1,6 @@
 import APIKEYS from "./apiKEYS";
 import { APIStrategy } from "./api_strategy";
 import ConfigManager from "./config_manager";
-import VirusTotalStrategy from "./virus_total_strategy";
 
 const axios = require('axios').default;
 
@@ -33,7 +32,7 @@ export type Response = {
 }
 
 export class APICalls {
-    private cachedResults: Map<string, CommonDataModel[]>;
+    private cachedResults: Map<string, PromiseSettledResult<CommonDataModel>[]>;
     private strategies: APIStrategy[];
 
     constructor() {
@@ -50,10 +49,10 @@ export class APICalls {
      * @param type The type of token being passed, url, ip, etc...
      * @param token The token being sent to the APIs
      */
-    public async getResponse(type: string, token: string): Promise<CommonDataModel[]> {
-        var cached: CommonDataModel[] | undefined = this.cachedResults.get(token);
+    public async getResponse(type: string, token: string): Promise<PromiseSettledResult<CommonDataModel>[]> {
+        var cached: PromiseSettledResult<CommonDataModel>[] | undefined = this.cachedResults.get(token);
         if (cached !== undefined) return Promise.resolve(cached!);
-        return Promise.all(this.strategies.filter((strategy) => type in strategy.getTokenTypes())
+        return Promise.allSettled(this.strategies.filter((strategy) => strategy.getTokenTypes().includes(type))
             .map(async function (strategy) { return await strategy.getResponse(token); }));
     }
 }

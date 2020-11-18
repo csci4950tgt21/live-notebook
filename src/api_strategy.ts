@@ -63,6 +63,7 @@ export abstract class APIStrategy {
      */
     private asCommonDataModel(response: JSON | undefined): CommonDataModel {
         if (response == undefined) return { api_name: this.apiJSON.name };
-        else return <CommonDataModel>this.normalize(this.apiJSON.mapping, response);
+        console.log(JSON.stringify(response));
+        return <CommonDataModel>this.normalize(this.apiJSON.mapping, response);
     }
 }
