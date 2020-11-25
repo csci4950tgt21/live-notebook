@@ -1,5 +1,6 @@
 import { APIStrategy } from "./api_strategy";
 import axios from 'axios';
+import { CommonDataModel } from "./api_calls";
 const FormData = require('form-data');
 
 /**
@@ -12,17 +13,17 @@ export default class VirusTotalStrategy extends APIStrategy {
     protected async getRawResponse(token: string): Promise<any> {
         // Get values out of loaded config data
         let api_url = this.apiJSON.url;
-        var vt_key = this.apiJSON.query.key;
+        // var vt_key = this.apiJSON.header.headers["x-apikey"];
 
         // Check that the key is defined
-        if (vt_key == undefined) return Promise.reject("VirusTotal API Key Undefined");
+        // if (vt_key == undefined) return Promise.reject("VirusTotal API Key Undefined");
 
         var formData = new FormData();
         formData.append("url", token);
         let virus_total_header = {
             headers: {
                 ...formData.getHeaders(),
-                "x-apikey": vt_key, //the token is a variable which holds the token
+                ...this.apiJSON.header.headers
             },
         };
         let post_resp = {
@@ -52,4 +53,17 @@ export default class VirusTotalStrategy extends APIStrategy {
             return err.message;
             });
     }
+
+    // protected normalize(mapping: object | string, response: any): CommonDataModel {
+    //     const date: Date = new Date(0);
+    //     date.setUTCSeconds(response.data.data.attributes.date)
+    //     const normalizedResponse: CommonDataModel = {
+    //         ...response.data.data.attributes,
+    //         api_name: "VirusTotal URL",
+    //         last_modification_date: date.toLocaleDateString(),
+    //         type: response.data.data.type,
+    //         links: response.data.data.links
+    //     };
+    //     return normalizedResponse
+    // }
 }
