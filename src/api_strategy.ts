@@ -51,25 +51,25 @@ export abstract class APIStrategy {
     private normalize(mapping: any, response: any): CommonDataModel {
         const normalizedResponse: CommonDataModel = {
             api_name: this.apiJSON.name,
-            last_modification_date: _.get(response,mapping.last_modification_date),
-            last_analysis_stats: {
-                harmless: _.get(response,mapping.last_analysis_stats.harmless),
-                malicious: _.get(response,mapping.last_analysis_stats.malicious),
-                suspicious: _.get(response,mapping.last_analysis_stats.suspicious),
-                timeout: _.get(response,mapping.last_analysis_stats.timeout),
-                undetected: _.get(response,mapping.last_analysis_stats.undetected),
+            last_modification_date: _.get(response, mapping.last_modification_date, undefined),
+            last_analysis_stats: _.get(response, mapping.last_analysis_stats, undefined) ?? {
+                harmless: _.get(response, mapping.last_analysis_stats.harmless, undefined),
+                malicious: _.get(response, mapping.last_analysis_stats.malicious, undefined),
+                suspicious: _.get(response, mapping.last_analysis_stats.suspicious, undefined),
+                timeout: _.get(response, mapping.last_analysis_stats.timeout, undefined),
+                undetected: _.get(response, mapping.last_analysis_stats.undetected, undefined),
             },
-            reputation: _.get(response,mapping.reputation),
-            tags: _.get(response,mapping.tags),
-            total_votes: {
-                harmless: _.get(response,mapping.total_votes.harmless),
-                malicious: _.get(response,mapping.total_votes.malicious),
+            reputation: _.get(response, mapping.reputation, undefined),
+            tags: _.get(response, mapping.tags, undefined),
+            total_votes: _.get(response, mapping.total_votes, undefined) ?? {
+                harmless: _.get(response, mapping.total_votes.harmless, undefined),
+                malicious: _.get(response, mapping.total_votes.malicious, undefined),
             },
-            whois: _.get(response,mapping.whois),
-            link_self: _.get(response,mapping.link_self),
-            type: _.get(response,mapping.type),
-            harmful: _.get(response,mapping.harmful)
-        }
+            whois: _.get(response, mapping.whois, undefined),
+            link_self: _.get(response, mapping.link_self, undefined),
+            type: _.get(response, mapping.type, undefined),
+            harmful: _.get(response, mapping.harmful, undefined)
+        } ?? response;
         return normalizedResponse;
     }
 

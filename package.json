@@ -81,8 +81,24 @@
 								}
 							},
 							"mapping": {
-								"link_self": "matches.0.threat.url",
-								"type": "matches.0.threatEntryType"
+								"last_modification_date": "",
+								"last_analysis_stats": {
+									"harmless": "",
+									"malicious": "",
+									"suspicious": "",
+									"timeout": "",
+									"undetected": ""
+								},
+								"reputation": "",
+								"tags": "",
+								"total_votes": {
+									"harmless": "",
+									"malicious": ""
+								},
+								"whois": "",
+								"link_self": "",
+								"type": "",
+								"harmful": ""
 							}
 						},
 						{
@@ -93,7 +109,7 @@
 								"IP"
 							],
 							"query": {
-								"key": "61e44c0cd9049f50e8b4721d9d3b7eeb6d223c2874c6c3dc80a9537b50055f79"
+								"key": "{API_KEY_HERE}"
 							},
 							"request": {
 							},
@@ -129,8 +145,10 @@
 							"type": [
 								"URL"
 							],
-							"query": {
-								"key": "61e44c0cd9049f50e8b4721d9d3b7eeb6d223c2874c6c3dc80a9537b50055f79"
+							"data": {
+								"headers": {
+									"x-apikey": "{API_KEY_HERE}"
+								}
 							},
 							"mapping": {
 								"last_modification_date": "attributes.date",
