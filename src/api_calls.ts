@@ -26,13 +26,8 @@ export type CommonDataModel = {
     harmful?: string | boolean
 }
 
-export type Response = {
-    status: number,
-    data: CommonDataModel
-}
-
 export class APICalls {
-    private cachedResults: Map<string, PromiseSettledResult<CommonDataModel>[]>;
+    private cachedResults: Map<string, Promise<PromiseSettledResult<CommonDataModel>[]>>;
     private strategies: APIStrategy[];
 
     constructor() {
@@ -50,8 +45,19 @@ export class APICalls {
      * @param token The token being sent to the APIs
      */
     public async getResponse(type: string, token: string): Promise<PromiseSettledResult<CommonDataModel>[]> {
-        var cached: PromiseSettledResult<CommonDataModel>[] | undefined = this.cachedResults.get(token);
-        if (cached !== undefined) return Promise.resolve(cached!);
+        // Check cache first
+        /**var cached: Promise<PromiseSettledResult<CommonDataModel>[]> | undefined = this.cachedResults.get(token);
+        if (cached !== undefined) return cached!;
+        // Call all applicable strategies on token
+        let settledPromise: Promise<PromiseSettledResult<CommonDataModel>[]> = Promise.allSettled(this.strategies.filter((strategy) => strategy.getTokenTypes().includes(type))
+            .map(async function (strategy) { return await strategy.getResponse(token); }));
+        // Cache results
+        // this.cachedResults.set(token,settledPromise);
+        // Return results
+        return settledPromise;*/
+        /*var cached: Promise<PromiseSettledResult<CommonDataModel>[]> | undefined = this.cachedResults.get(token);
+        if (cached !== undefined) return Promise.resolve(cached!);*/
+        
         return Promise.allSettled(this.strategies.filter((strategy) => strategy.getTokenTypes().includes(type))
             .map(async function (strategy) { return await strategy.getResponse(token); }));
     }

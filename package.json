@@ -93,9 +93,33 @@
 								"IP"
 							],
 							"query": {
-								"key": "{API_KEY_HERE}"
+								"key": "61e44c0cd9049f50e8b4721d9d3b7eeb6d223c2874c6c3dc80a9537b50055f79"
 							},
-							"mapping": {}
+							"request": {
+							},
+							"headers": {
+								"x-apikey": "{live-notebook.apiKey}"
+							},
+							"mapping": {
+								"last_modification_date": "data.attributes.last_modification_date",
+								"last_analysis_stats": {
+									"harmless": "data.attributes.last_analysis_stats.harmless",
+									"malicious": "data.attributes.last_analysis_stats.malicious",
+									"suspicious": "data.attributes.last_analysis_stats.suspicious",
+									"timeout": "data.attributes.last_analysis_stats.timeout",
+									"undetected": "data.attributes.last_analysis_stats.undetected"
+								},
+								"reputation": "data.attributes.reputation",
+								"tags": "data.attributes.tags",
+								"total_votes": {
+									"harmless": "data.attributes.total_votes.harmless",
+									"malicious": "data.attributes.total_votes.malicious"
+								},
+								"whois": "data.attributes.whois",
+								"link_self": "data.links.self",
+								"type": "data.type",
+								"harmful": ""
+							}
 						},
 						{
 							"name": "VirusTotal URL",
@@ -106,7 +130,7 @@
 								"URL"
 							],
 							"query": {
-								"key": "{API_KEY_HERE}"
+								"key": "61e44c0cd9049f50e8b4721d9d3b7eeb6d223c2874c6c3dc80a9537b50055f79"
 							},
 							"mapping": {
 								"last_modification_date": "attributes.date",
@@ -131,7 +155,7 @@
 						}
 					],
 					"scope": "application",
-					"description": "APIs for Types of Strings"
+					"description": "Use {live-notebook.stringOfInterest} in api urls where you want to enter tokens such as urls or ips. Use {live-notebook.apiKey} in headers where you want the key."
 				}
 			}
 		}

@@ -6,7 +6,7 @@ const FormData = require('form-data');
  * The VirusTotalStrategy is a special implementation
  * specifically designed for the VirusTotal API, due to
  * its unique calling method, which requires GET and POST
- * calls.
+ * calls. As well as the usage of form data for post.
  */
 export default class VirusTotalStrategy extends APIStrategy {
     protected async getRawResponse(token: string): Promise<any> {
@@ -22,7 +22,7 @@ export default class VirusTotalStrategy extends APIStrategy {
         let virus_total_header = {
             headers: {
                 ...formData.getHeaders(),
-                "x-apikey": vt_key, //the token is a variable which holds the token
+                "x-apikey": vt_key,
             },
         };
         let post_resp = {
