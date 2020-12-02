@@ -532,7 +532,9 @@ Response =
     }
 }
 
-
+{
+    "isMalicious" : ".attributes.total_votes"
+}
 
 URL for URL
 

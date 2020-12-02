@@ -116,6 +116,8 @@
 		"vscode-test": "^1.4.0"
 	},
 	"dependencies": {
-		"axios": "^0.20.0"
+		"axios": "^0.21.0",
+		"form-data": "^3.0.0",
+		"promise": "^8.1.0"
 	}
 }

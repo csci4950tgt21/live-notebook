@@ -1,9 +1,17 @@
 import APIKEYS from "./apiKEYS";
+import axios from 'axios';
 
-const axios = require('axios').default;
+const FormData = require('form-data');
+
+type response = {
+    status: number,
+    body: {
+        type: string,
+        string: string,
+    }
+}
 
 export class APICalls {
-
     private cachedResultsIP: Map<string, string>;
     private cachedResultsURL: Map<string, string>;
 
@@ -12,45 +20,77 @@ export class APICalls {
         this.cachedResultsURL = new Map();
     }
 
-    public getIPdata(ipaddress: string): string {
+    public getIPdata(ipaddress: string): Promise<any> {
         let cacheHit = this.cachedResultsIP.get(ipaddress);
         if (cacheHit) {
             console.log("CACHE HIT");
-            return cacheHit;
-        }
-        else {
-            return "### IP Address";
+            return new Promise((resolve, _) => {
+                resolve(cacheHit);
+            });
+        } else {
+            return new Promise((resolve, _) => {
+                resolve("### IP Address");
+            });;
         }
     }
 
-    public getURLdata(url: string): string | undefined {
+
+
+    public async getURLdata(url: string): Promise<any> {
+        let response = "";
         let cacheHit = this.cachedResultsURL.get(url);
+
         if (cacheHit) {
             console.log("Cache Hit");
             return cacheHit;
-        }
+        } 
         else {
-            let api_url = 'https://safebrowsing.googleapis.com/v4/threatMatches:find?key=' + APIKEYS.getGoogleKey();
-            let params = {
-                "threatInfo": {
-                    "threatTypes": ["UNWANTED_SOFTWARE", "MALWARE", "THREAT_TYPE_UNSPECIFIED", "SOCIAL_ENGINEERING", "POTENTIALLY_HARMFUL_APPLICATION"],
-                    "platformTypes": ["ANY_PLATFORM"],
-                    "threatEntryTypes": ["URL"],
-                    "threatEntries": [
-                        { "url": url }
-                    ]
+            let api_url = "https://www.virustotal.com/api/v3/urls";
+            var vt_key = APIKEYS.getVirusTotalKey();
+            let post_resp = {
+                data: {
+                    id: -1,
+                },
+            };
+            var formData = new FormData();
+            formData.append("url", url);
+            let virus_total_header = {
+                headers: {
+                    ...formData.getHeaders(),
+                    "x-apikey": vt_key, //the token is a variable which holds the token
+                },
+            };
+            let resolve = async (resp: any) => {
+                this.cachedResultsURL.set(url, "Processing");
+                post_resp.data = resp.data.data;
+                let url_id = post_resp.data.id;
+                console.log(url_id);
+                if (url_id != undefined) {
+                    let new_api_url =
+                        "https://www.virustotal.com/api/v3/analyses/" + url_id;
+                    let resolve = (resp: any) => {
+                        if (resp.data.data.attributes.status === "completed") {
+                            let stats = resp.data.data.attributes.stats;
+                            var date = new Date(resp.data.data.attributes.date * 1000); 
+                            response =
+                                "### Last Analyzed Time: \n"+ date.toString() +" \n ### Last Analysis Stats \n\n " +
+                                JSON.stringify(stats);
+                        }
+                        this.cachedResultsURL.set(url, response);
+                        return response;
+                    };
+                    return await axios
+                        .get(new_api_url, virus_total_header)
+                        .then(resolve);
+                } else {
+                    return "### URL NOT FOUND";
                 }
             }
-            return axios.post(api_url, params).then(
-                (resp: any) => {
-                    let response = "URL Not found in Safe Browsing Database";
-                    if (resp.data.matches) {
-                        response = "### URL \n  #### JSON Payload \n\n " + JSON.stringify(resp.data.matches);
-                    }
-                    this.cachedResultsURL.set(url, response);
-                    return response
-                }
-            )
+            return await axios
+                .post(api_url, formData, virus_total_header).then(resolve, (err: any) => {
+                    console.error(err);
+                    return err.message;
+                });
         }
     }
 }
