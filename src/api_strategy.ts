@@ -1,4 +1,6 @@
 import { CommonDataModel } from "./api_calls"
+import { Cache } from "./cache";
+import { MapCache } from "./map_cache";
 var _ = require('lodash');
 
 /**
@@ -17,8 +19,16 @@ export abstract class APIStrategy {
     // The JSON for the API
     protected apiJSON: any;
 
+    // The unique instance ID for the API,
+    // used for caching
+    protected apiID: number;
+
+    // The static counter used for creating a unique API ID
+    private static apiCounter = 0;
+
     constructor(apiJSON: any) {
         this.apiJSON = apiJSON;
+        this.apiID = APIStrategy.apiCounter++;
     }
 
     /**
@@ -80,5 +90,27 @@ export abstract class APIStrategy {
     private asCommonDataModel(response: JSON | undefined): CommonDataModel {
         if (response == undefined) return { api_name: this.apiJSON.name };
         return <CommonDataModel>this.normalize(this.apiJSON.mapping, response);
+    }
+
+    /**
+     * Get a unique caching key for the API
+     * and a lookup value, such as a url, email, ip, etc...
+     */
+    protected getCacheKey(lookupVal: string): string{
+        return lookupVal + this.apiID;
+    }
+
+    private static apiCache: Cache<JSON>;
+    /**
+     * Allows access to a universal cache
+     * for all strategies to share. Strategies should
+     * use getCacheKey when inserting and retrieving
+     * values from the cache.
+     */
+    protected static getCache(): Cache<JSON> {
+        if(!this.apiCache) {
+            this.apiCache = new MapCache();
+        }
+        return this.apiCache;
     }
 }

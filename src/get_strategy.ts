@@ -24,6 +24,11 @@ var _ = require('lodash');
  */
 export class GetStrategy extends APIStrategy {
     protected async getRawResponse(token: string) {
+        // Check api shared cache first
+        let cache = APIStrategy.getCache();
+        let cacheResult = cache.getCachedValue(this.getCacheKey(token));
+        if (cacheResult) return cacheResult;
+
         // Get values out of loaded config data
         let api_url : string = this.apiJSON.url;
         var api_key : string = this.apiJSON.query.key;
@@ -54,6 +59,9 @@ export class GetStrategy extends APIStrategy {
                 ...api_headers
             }
         });
+
+        // Cache the data for the token
+        cache.insertValue(this.getCacheKey(token), retval.data);
 
         return retval.data;
     }

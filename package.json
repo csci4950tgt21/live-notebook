@@ -56,7 +56,7 @@
 								"URL"
 							],
 							"query": {
-								"key": "{API_KEY_HERE}"
+								"key": "AIzaSyBRDZ9lG8dZog5Jg5RvpeoSJMtq5pyaD-4"
 							},
 							"request": {
 								"threatInfo": {
@@ -109,7 +109,7 @@
 								"IP"
 							],
 							"query": {
-								"key": "{API_KEY_HERE}"
+								"key": "61e44c0cd9049f50e8b4721d9d3b7eeb6d223c2874c6c3dc80a9537b50055f79"
 							},
 							"request": {
 							},
@@ -147,7 +147,7 @@
 							],
 							"data": {
 								"headers": {
-									"x-apikey": "{API_KEY_HERE}"
+									"x-apikey": "61e44c0cd9049f50e8b4721d9d3b7eeb6d223c2874c6c3dc80a9537b50055f79"
 								}
 							},
 							"mapping": {
