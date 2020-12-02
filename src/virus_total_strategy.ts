@@ -44,8 +44,6 @@ export default class VirusTotalStrategy extends APIStrategy {
             }
         }
 
-        Promise.resolve(resolve);
-
         return axios
             .post(api_url, formData, virus_total_header).then(resolve, (err: any) => {
             console.error(err);
