@@ -96,8 +96,8 @@ export abstract class APIStrategy {
      * Get a unique caching key for the API
      * and a lookup value, such as a url, email, ip, etc...
      */
-    protected getCacheKey(lookupVal: string): string{
-        return lookupVal + this.apiID;
+    protected getCacheKey(lookupVal: string): string {
+        return "{" + this.apiID + "} " + lookupVal;
     }
 
     private static apiCache: Cache<JSON>;
