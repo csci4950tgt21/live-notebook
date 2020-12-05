@@ -1,7 +1,7 @@
 import { APIStrategy } from "./api_strategy";
 import ConfigManager from "./config_manager";
 
-const axios = require('axios').default;
+const FormData = require('form-data');
 
 export type CommonDataModel = {
     api_name: string,
