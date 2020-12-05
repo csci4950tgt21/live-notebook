@@ -1,3 +1,4 @@
+import { config } from 'process';
 import * as vscode from 'vscode';
 import { APIStrategy } from './api_strategy';
 import { GetStrategy } from './get_strategy';
@@ -12,7 +13,12 @@ import VirusTotalStrategy from './virus_total_strategy';
 export class ConfigManager {
     // Singleton instance of the config manager
     private static myConfigManager: ConfigManager;
+    private configuration: vscode.WorkspaceConfiguration;
 
+    private constructor() {
+        this.configuration = vscode.workspace.getConfiguration('live-notebook');
+
+    }
     /**
      * @returns The singleton instance of ConfigManager
      */
@@ -28,8 +34,12 @@ export class ConfigManager {
      */
     public getTypedRegexes() {
         // Access the configuration
-        let regexArray: any = vscode.workspace.getConfiguration('live-notebook').get('regexes');
+        let regexArray: any = this.configuration.get('regexes');
         return regexArray;
+    }
+
+    public onDidUpdateConfiguration(onUpdate: (value: any) => unknown | undefined) {
+        vscode.workspace.onDidChangeConfiguration(onUpdate);
     }
 
     /**
@@ -40,7 +50,7 @@ export class ConfigManager {
      */
     public getAPIStrategies() {
         // Access the configuration
-        let apiArray: any = vscode.workspace.getConfiguration('live-notebook').get('apis');
+        let apiArray: any = this.configuration.get('apis');
 
         // Create a new array of api strategies
         let strategies = new Array<APIStrategy>(apiArray.length);

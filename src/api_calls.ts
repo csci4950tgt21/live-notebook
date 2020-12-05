@@ -32,6 +32,7 @@ export class APICalls {
     constructor() {
         this.cachedResults = new Map();
         this.strategies = ConfigManager.getConfigManager().getAPIStrategies();
+        ConfigManager.getConfigManager().onDidUpdateConfiguration(() => this.strategies = ConfigManager.getConfigManager().getAPIStrategies());
     }
 
     /**
