@@ -44,15 +44,6 @@ class NotebookHoverProvider implements vscode.HoverProvider {
             });
         }
     }
-
-    /**
-     * Convert the data of type Promise<PromiseSettledResult<CommonDataModel>[]>
-     * to human readable information.
-     */
-    private settledResponseToString(response: Promise<PromiseSettledResult<CommonDataModel>[]>) {
-        let formattedResponse: string = "";
-        return formattedResponse;
-    }
 }
 
 export default NotebookHoverProvider;
