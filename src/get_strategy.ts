@@ -5,60 +5,37 @@ var _ = require('lodash');
 
 /**
  * The API Strategy for GET requests.
- * 
- * WARNING: THIS STRATEGY MAY FAIL IF YOUR API DOES
- * NOT WORK WITH THE FOLLOWING FORMATS.
- * 
- * Valid formats:
- * 1. Your api takes both the token (url, email, ip) and
- * the api key in the url request. And can ignore empty
- * headers, or has preset headers that are loaded from
- * the config.
- * 
- * 2. Your api takes both the url and
- * the api key in a headers section (which must be defined
- * in the config). And puts the token in the url outside of
- * the headers in the GET request.
- * 
- * 3. Any combination of the above mentioned capabilities.
  */
 export class GetStrategy extends APIStrategy {
     protected async getRawResponse(token: string) {
         // Check api shared cache first
         let cache = APIStrategy.getCache();
         let cacheResult = cache.getCachedValue(this.getCacheKey(token));
-        if (cacheResult) return cacheResult;
+        if (cacheResult) {
+            console.log(this.apiJSON.name + " accessed cache at key " + this.getCacheKey(token));
+            return cacheResult;
+        }
 
-        // Get values out of loaded config data
-        let api_url : string = this.apiJSON.url;
-        var api_key : string = this.apiJSON.query.key;
+        // Replace all strings of interest with the matched token, URL, IP, EMAIL, etc...
+        var withToken = JSON.parse(JSON.stringify(this.apiJSON).replace("{live-notebook.stringOfInterest}", token));
 
-        // Check that the key is defined
-        if (api_key == undefined) return Promise.reject("VirusTotal API Key Undefined");
+        // Get headers from the configuration
+        let configHeaders = _.has(this.apiJSON,"headers") ? this.apiJSON.headers : "";
+        var config = {
+            headers: {
+                ...configHeaders
+            },
+        };
 
-        // Create the headers for the api
-        let api_headers = {...this.apiJSON.headers};
-        
-        // Iterate through the api headers
-        Object.keys(api_headers).forEach(function(key) {
-            if (typeof(api_headers[key]) == "string") {
-                // Replace the apiKey in the headers, if it exists
-                if ((<string>api_headers[key]).match("{live-notebook.apiKey}")) {
-                    api_headers[key] = api_key;
-                }
-                // Replace the url in the headers, if it exists
-                if ((<string>api_headers[key]).match("{live-notebook.url}")) {
-                    api_headers[key] = api_url;
-                }
-            }
-        });
+        // Get the body from the configuration
+        let configBody = _.has(withToken,"body") ? withToken.body : undefined;
+
+        // Get requests do not use bodies, log warning if one exists.
+        if (configBody) console.log("WARNING: Body defined for: " + this.apiJSON.name + ", however it is using " +
+                                    "a GET request, so this information will not be used.");
 
         // Get data, replace string of interest with the token, add in the headers from the config
-        let retval = await Axios.get(api_url.replace("{live-notebook.stringOfInterest}",token).replace("{live-notebook.apiKey}",api_key),{
-            headers: {
-                ...api_headers
-            }
-        });
+        let retval = await Axios.get(withToken.url, config);
 
         // Cache the data for the token
         cache.insertValue(this.getCacheKey(token), retval.data);

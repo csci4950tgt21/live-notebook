@@ -58,7 +58,7 @@
 							"query": {
 								"key": "{API_KEY_HERE}"
 							},
-							"request": {
+							"body": {
 								"threatInfo": {
 									"threatTypes": [
 										"UNWANTED_SOFTWARE",
@@ -98,7 +98,7 @@
 								"whois": "",
 								"link_self": "",
 								"type": "",
-								"harmful": ""
+								"harmful": "matches"
 							}
 						},
 						{
@@ -108,13 +108,8 @@
 							"type": [
 								"IP"
 							],
-							"query": {
-								"key": "{API_KEY_HERE}"
-							},
-							"request": {
-							},
 							"headers": {
-								"x-apikey": "{live-notebook.apiKey}"
+								"x-apikey": "{API_KEY_HERE}"
 							},
 							"mapping": {
 								"last_modification_date": "data.attributes.last_modification_date",
@@ -145,10 +140,8 @@
 							"type": [
 								"URL"
 							],
-							"data": {
-								"headers": {
-									"x-apikey": "{API_KEY_HERE}"
-								}
+							"headers": {
+								"x-apikey": "{API_KEY_HERE}"
 							},
 							"mapping": {
 								"last_modification_date": "attributes.date",

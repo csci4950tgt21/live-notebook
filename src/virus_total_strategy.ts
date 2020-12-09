@@ -20,7 +20,7 @@ export default class VirusTotalStrategy extends APIStrategy {
         let virus_total_header = {
             headers: {
                 ...formData.getHeaders(),
-                ...this.apiJSON.data.headers
+                ...this.apiJSON.headers
             },
         };
         let post_resp = {

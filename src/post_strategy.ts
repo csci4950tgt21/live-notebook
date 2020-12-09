@@ -1,22 +1,44 @@
 import { APIStrategy } from "./api_strategy";
 import axios from 'axios';
 import { URLSearchParams } from "url";
-const FormData = require('form-data');
+var _ = require('lodash');
 
 /**
  * The API Strategy for post calls
  */
 export class PostStrategy extends APIStrategy {
+    protected async getRawResponse(token: string) {
+        // Check api shared cache first
+        let cache = APIStrategy.getCache();
+        let cacheResult = cache.getCachedValue(this.getCacheKey(token));
+        if (cacheResult) {
+            console.log(this.apiJSON.name + " accessed cache at key " + this.getCacheKey(token));
+            return cacheResult;
+        }
 
-    getRawResponse(token: string) {
+        // Replace all strings of interest with the matched token, URL, IP, EMAIL, etc...
         var withToken = JSON.parse(JSON.stringify(this.apiJSON).replace("{live-notebook.stringOfInterest}", token));
-        var formData = new FormData();
+
+        // Get headers from the configuration
+        let configHeaders = _.has(withToken,"headers") ? withToken.headers : "";
         var config = {
-            ...withToken.header,
             headers: {
-                ...formData.getHeaders(),
+                ...configHeaders
             },
         };
-        return axios.post(withToken.url + "?" + new URLSearchParams(withToken.query), withToken.request, config);
+
+        // Get the body from the configuration
+        let configBody = _.has(withToken,"body") ? withToken.body : undefined;
+
+        // Post requests usually use bodies, log warning if one does not exist.
+        if (!configBody) console.log("WARNING: Body undefined for: " + this.apiJSON.name + ", and it is using " +
+                                    "a POST request, so it may be missing information.");
+        
+        let retval = await axios.post(withToken.url + "?" + new URLSearchParams(withToken.query), configBody, config);
+
+        // Cache the data for the token
+        cache.insertValue(this.getCacheKey(token), retval.data);
+
+        return retval.data;
     }
 }
