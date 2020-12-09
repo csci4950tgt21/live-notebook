@@ -20,7 +20,7 @@ export class PostStrategy extends APIStrategy {
         var withToken = JSON.parse(JSON.stringify(this.apiJSON).replace("{live-notebook.stringOfInterest}", token));
 
         // Get headers from the configuration
-        let configHeaders = _.has(withToken,"headers") ? withToken.headers : "";
+        let configHeaders = _.has(withToken, "headers") ? withToken.headers : {};
         var config = {
             headers: {
                 ...configHeaders
@@ -28,12 +28,12 @@ export class PostStrategy extends APIStrategy {
         };
 
         // Get the body from the configuration
-        let configBody = _.has(withToken,"body") ? withToken.body : undefined;
+        let configBody = _.has(withToken, "body") ? withToken.body : undefined;
 
         // Post requests usually use bodies, log warning if one does not exist.
         if (!configBody) console.log("WARNING: Body undefined for: " + this.apiJSON.name + ", and it is using " +
-                                    "a POST request, so it may be missing information.");
-        
+            "a POST request, so it may be missing information.");
+
         let retval = await axios.post(withToken.url + "?" + new URLSearchParams(withToken.query), configBody, config);
 
         // Cache the data for the token

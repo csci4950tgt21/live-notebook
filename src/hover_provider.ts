@@ -27,18 +27,18 @@ class NotebookHoverProvider implements vscode.HoverProvider {
             // TODO Change to a dynamic configuration driven response
             return response.then((resArr: PromiseSettledResult<CommonDataModel>[]) => {
                 var mdString = resArr.filter(res => res.status == "fulfilled").map(res => (<PromiseFulfilledResult<CommonDataModel>>res).value)
-                    .map((cdm) => `### ${cdm.api_name}\n`
-                        + (cdm.last_modification_date != undefined ? (`#### Last Modified\n ${cdm.last_modification_date}\n`) : "")
-                        + (cdm.harmful != undefined ? (`#### Harmful\n ${cdm.harmful}\n`) : "")
-                        + (cdm.reputation != undefined ? (`#### Reputation\n ${cdm.reputation}\n`) : "")
-                        + (cdm.tags != undefined ? (`#### Tags\n ${cdm.tags.map(tag => `\`${tag}\``).join(' ')}\n`) : "")
-                        + (cdm.whois != undefined ? (`#### Whois\n ${cdm.whois}\n`) : "")
-                        + (cdm.link_self != undefined ? (`#### Link.self\n ${cdm.link_self}\n`) : "")
-                        + (cdm.type != undefined ? (`#### Type\n ${cdm.type}\n`) : "")
-                        + ((cdm.total_votes?.harmless || cdm.total_votes?.malicious) != undefined ? ("#### Total Votes\n|Harmless|Malicious|\n|-|-|\n" +
+                    .map((cdm) => `#### ${cdm.api_name}\n`
+                        + (cdm.last_modification_date != undefined ? (`**Last Modified**: ${cdm.last_modification_date}\n`) : "")
+                        + (cdm.harmful != undefined ? (`**Harmful**: ${cdm.harmful}\n`) : "")
+                        + (cdm.reputation != undefined ? (`**Reputation**: ${cdm.reputation}\n`) : "")
+                        + (cdm.tags != undefined ? (`**Tags**: ${cdm.tags.map(tag => `\`${tag}\``).join(' ')}\n`) : "")
+                        + (cdm.whois != undefined ? (`**Whois**: ${cdm.whois}\n`) : "")
+                        + (cdm.link_self != undefined ? (`**Link.self**: ${cdm.link_self}\n`) : "")
+                        + (cdm.type != undefined ? (`**Type**: ${cdm.type}\n`) : "")
+                        + ((cdm.total_votes?.harmless || cdm.total_votes?.malicious) != undefined ? ("**Total Votes**: |Harmless|Malicious|\n|-|-|\n" +
                             `|${cdm.total_votes?.harmless}|${cdm.total_votes?.malicious}|\n`) : "")
                         + ((cdm.last_analysis_stats?.harmless || cdm.last_analysis_stats?.malicious || cdm.last_analysis_stats?.suspicious || cdm.last_analysis_stats?.timeout
-                            || cdm.last_analysis_stats?.undetected) != undefined ? ("#### Last Analysis Stats\n|Harmless|Malicious|Suspicious|Timeout|Undetected|\n|-|-|-|-|-|\n" +
+                            || cdm.last_analysis_stats?.undetected) != undefined ? ("**Last Analysis Stats**: |Harmless|Malicious|Suspicious|Timeout|Undetected|\n|-|-|-|-|-|\n" +
                             `|${cdm.last_analysis_stats?.harmless}|${cdm.last_analysis_stats?.malicious}|${cdm.last_analysis_stats?.suspicious}|${cdm.last_analysis_stats?.timeout}|${cdm.last_analysis_stats?.undetected}|\n`) : "")
                     ).join("\n");
                 return new vscode.Hover(new vscode.MarkdownString(mdString));

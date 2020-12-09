@@ -61,24 +61,24 @@ export abstract class APIStrategy {
     private normalize(mapping: any, response: any): CommonDataModel {
         const normalizedResponse: CommonDataModel = {
             api_name: this.apiJSON.name,
-            last_modification_date: _.get(response, mapping.last_modification_date, undefined),
-            last_analysis_stats: _.get(response, mapping.last_analysis_stats, undefined) ?? {
-                harmless: _.get(response, mapping.last_analysis_stats.harmless, undefined),
-                malicious: _.get(response, mapping.last_analysis_stats.malicious, undefined),
-                suspicious: _.get(response, mapping.last_analysis_stats.suspicious, undefined),
-                timeout: _.get(response, mapping.last_analysis_stats.timeout, undefined),
-                undetected: _.get(response, mapping.last_analysis_stats.undetected, undefined),
+            last_modification_date: _.get(response, _.get(mapping, "last_modification_date", undefined), undefined),
+            last_analysis_stats: _.get(response,_.get(mapping, "last_analysis_stats", undefined), undefined) ?? {
+                harmless: _.get(response,_.get(mapping, "last_analysis_stats.harmless", undefined), undefined),
+                malicious: _.get(response,_.get(mapping, "last_analysis_stats.malicious", undefined), undefined),
+                suspicious: _.get(response,_.get(mapping, "last_analysis_stats.suspicious", undefined), undefined),
+                timeout: _.get(response,_.get(mapping, "last_analysis_stats.timeout", undefined), undefined),
+                undetected: _.get(response,_.get(mapping, "last_analysis_stats.undetected", undefined), undefined),
             },
-            reputation: _.get(response, mapping.reputation, undefined),
-            tags: _.get(response, mapping.tags, undefined),
-            total_votes: _.get(response, mapping.total_votes, undefined) ?? {
-                harmless: _.get(response, mapping.total_votes.harmless, undefined),
-                malicious: _.get(response, mapping.total_votes.malicious, undefined),
+            reputation: _.get(response,_.get(mapping, "reputation", undefined), undefined),
+            tags: _.get(response,_.get(mapping, "tags", undefined), undefined),
+            total_votes: _.get(response,_.get(mapping, "total_votes", undefined), undefined) ?? {
+                harmless: _.get(response,_.get(mapping, "total_votes.harmless", undefined), undefined),
+                malicious: _.get(response,_.get(mapping, "total_votes.malicious", undefined), undefined),
             },
-            whois: _.get(response, mapping.whois, undefined),
-            link_self: _.get(response, mapping.link_self, undefined),
-            type: _.get(response, mapping.type, undefined),
-            harmful: _.get(response, mapping.harmful, undefined)
+            whois: _.get(response,_.get(mapping, "whois", undefined), undefined),
+            link_self: _.get(response,_.get(mapping, "link_self", undefined), undefined),
+            type: _.get(response,_.get(mapping, "type", undefined), undefined),
+            harmful: _.get(response,_.get(mapping, "harmful", undefined), undefined)
         } ?? response;
         return normalizedResponse;
     }
@@ -108,7 +108,7 @@ export abstract class APIStrategy {
      * values from the cache.
      */
     protected static getCache(): Cache<JSON> {
-        if(!this.apiCache) {
+        if (!this.apiCache) {
             this.apiCache = new MapCache();
         }
         return this.apiCache;
