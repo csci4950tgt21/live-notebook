@@ -81,24 +81,8 @@
 								}
 							},
 							"mapping": {
-								"last_modification_date": "",
-								"last_analysis_stats": {
-									"harmless": "",
-									"malicious": "",
-									"suspicious": "",
-									"timeout": "",
-									"undetected": ""
-								},
-								"reputation": "",
-								"tags": "",
-								"total_votes": {
-									"harmless": "",
-									"malicious": ""
-								},
-								"whois": "",
-								"link_self": "",
-								"type": "",
-								"harmful": "matches"
+								"link_self": [ "matches", 0, "threat", "url" ],
+								"type": "matches[0].threatEntryType"
 							}
 						},
 						{
