@@ -14,10 +14,15 @@ export class ConfigManager {
     // Singleton instance of the config manager
     private static myConfigManager: ConfigManager;
     private configuration: vscode.WorkspaceConfiguration;
+    private onUpdates: Function[];
 
     private constructor() {
         this.configuration = vscode.workspace.getConfiguration('live-notebook');
-
+        this.onUpdates = [];
+        vscode.workspace.onDidChangeConfiguration(() => {
+            this.configuration = vscode.workspace.getConfiguration('live-notebook');
+            this.onUpdates.forEach(f => f())
+        });
     }
     /**
      * @returns The singleton instance of ConfigManager
@@ -39,7 +44,7 @@ export class ConfigManager {
     }
 
     public onDidUpdateConfiguration(onUpdate: (value: any) => unknown | undefined) {
-        vscode.workspace.onDidChangeConfiguration(onUpdate);
+        this.onUpdates.push(onUpdate);
     }
 
     /**

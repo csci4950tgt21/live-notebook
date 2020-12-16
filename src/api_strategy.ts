@@ -50,7 +50,7 @@ export abstract class APIStrategy {
      * The raw response interface function
      * @param token The parsed text token, for example a URL.
      */
-    protected abstract async getRawResponse(token: string): Promise<any>;
+    protected abstract getRawResponse(token: string): Promise<any>;
 
     /**
      * Use the api specific mapping from the api json to map from the
