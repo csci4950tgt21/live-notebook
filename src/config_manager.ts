@@ -21,7 +21,7 @@ export class ConfigManager {
         this.onUpdates = [];
         vscode.workspace.onDidChangeConfiguration(() => {
             this.configuration = vscode.workspace.getConfiguration('live-notebook');
-            this.onUpdates.forEach(f => f())
+            this.onUpdates.forEach(f => f());
         });
     }
     /**
