@@ -43,7 +43,7 @@ export class ConfigManager {
         return regexArray;
     }
 
-    public onDidUpdateConfiguration(onUpdate: (value: any) => unknown | undefined) {
+    public onDidUpdateConfiguration(onUpdate: (value: any) => unknown | undefined | void) {
         this.onUpdates.push(onUpdate);
     }
 
