@@ -19,4 +19,9 @@ export class MapCache<T> implements Cache<T> {
     insertValue(cacheKey: any, value: T): void {
         this.cacheMap.set(cacheKey, value);
     }
+
+    clearCache(): void {
+        this.cacheMap.clear();
+        console.log("Cleared cache");
+    }
 }

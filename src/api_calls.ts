@@ -26,11 +26,9 @@ export type CommonDataModel = {
 }
 
 export class APICalls {
-    private cachedResults: Map<string, Promise<PromiseSettledResult<CommonDataModel>[]>>;
     private strategies: APIStrategy[];
 
     constructor() {
-        this.cachedResults = new Map();
         this.strategies = ConfigManager.getConfigManager().getAPIStrategies();
         ConfigManager.getConfigManager().onDidUpdateConfiguration(() => this.strategies = ConfigManager.getConfigManager().getAPIStrategies());
     }

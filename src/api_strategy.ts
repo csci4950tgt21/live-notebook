@@ -1,6 +1,8 @@
 import { CommonDataModel } from "./api_calls"
 import { Cache } from "./cache";
 import { MapCache } from "./map_cache";
+import ConfigManager from "./config_manager";
+import { throws } from "assert";
 var _ = require('lodash');
 
 /**
@@ -107,9 +109,10 @@ export abstract class APIStrategy {
      * use getCacheKey when inserting and retrieving
      * values from the cache.
      */
-    protected static getCache(): Cache<JSON> {
+    protected static getSharedCache(): Cache<JSON> {
         if (!this.apiCache) {
             this.apiCache = new MapCache();
+            ConfigManager.getConfigManager().onDidUpdateConfiguration(() => this.apiCache.clearCache());
         }
         return this.apiCache;
     }

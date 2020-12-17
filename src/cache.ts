@@ -14,4 +14,9 @@ export interface Cache<T>{
      * @param value The value to be inserted
      */
     insertValue(cacheKey: any, value: T) : void;
+
+    /**
+     * Clear the cache.
+     */
+    clearCache() : void;
 }

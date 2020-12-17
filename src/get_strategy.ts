@@ -9,7 +9,7 @@ var _ = require('lodash');
 export class GetStrategy extends APIStrategy {
     protected async getRawResponse(token: string) {
         // Check api shared cache first
-        let cache = APIStrategy.getCache();
+        let cache = APIStrategy.getSharedCache();
         let cacheResult = cache.getCachedValue(this.getCacheKey(token));
         if (cacheResult) return cacheResult;
 
