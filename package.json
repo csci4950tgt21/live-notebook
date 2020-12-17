@@ -150,7 +150,7 @@
 						}
 					],
 					"scope": "application",
-					"description": "Use {live-notebook.stringOfInterest} in api urls where you want to enter tokens such as urls or ips. Use {live-notebook.apiKey} in headers where you want the key."
+					"description": "Use {live-notebook.stringOfInterest} in api urls where you want to enter tokens such as urls or ips."
 				}
 			}
 		}
