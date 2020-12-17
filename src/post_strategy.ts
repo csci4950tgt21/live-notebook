@@ -11,10 +11,7 @@ export class PostStrategy extends APIStrategy {
         // Check api shared cache first
         let cache = APIStrategy.getCache();
         let cacheResult = cache.getCachedValue(this.getCacheKey(token));
-        if (cacheResult) {
-            console.log(this.apiJSON.name + " accessed cache at key " + this.getCacheKey(token));
-            return cacheResult;
-        }
+        if (cacheResult) return cacheResult;
 
         // Replace all strings of interest with the matched token, URL, IP, EMAIL, etc...
         var withToken = JSON.parse(JSON.stringify(this.apiJSON).replace("{live-notebook.stringOfInterest}", token));

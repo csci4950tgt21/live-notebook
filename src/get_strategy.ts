@@ -11,16 +11,13 @@ export class GetStrategy extends APIStrategy {
         // Check api shared cache first
         let cache = APIStrategy.getCache();
         let cacheResult = cache.getCachedValue(this.getCacheKey(token));
-        if (cacheResult) {
-            console.log(this.apiJSON.name + " accessed cache at key " + this.getCacheKey(token));
-            return cacheResult;
-        }
+        if (cacheResult) return cacheResult;
 
         // Replace all strings of interest with the matched token, URL, IP, EMAIL, etc...
         var withToken = JSON.parse(JSON.stringify(this.apiJSON).replace("{live-notebook.stringOfInterest}", token));
 
         // Get headers from the configuration
-        let configHeaders = _.has(this.apiJSON,"headers") ? this.apiJSON.headers : "";
+        let configHeaders = _.has(withToken,"headers") ? withToken.headers : "";
         var config = {
             headers: {
                 ...configHeaders
