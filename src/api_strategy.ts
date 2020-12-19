@@ -2,7 +2,6 @@ import { CommonDataModel } from "./api_calls"
 import { Cache } from "./cache";
 import { MapCache } from "./map_cache";
 import ConfigManager from "./config_manager";
-import { throws } from "assert";
 var _ = require('lodash');
 
 /**
@@ -26,10 +25,21 @@ export abstract class APIStrategy {
     protected apiID: number;
 
     // The static counter used for creating a unique API ID
+    // NOT THREAD SAFE
     private static apiCounter = 0;
 
     constructor(apiJSON: any) {
         this.apiJSON = apiJSON;
+
+        // Reset the API Counter on configuration update
+        ConfigManager.getConfigManager().onDidUpdateConfiguration(() => APIStrategy.apiCounter = 0);
+
+        // Overflow protection
+        if (APIStrategy.apiCounter < 0) {
+            APIStrategy.apiCounter = 0;
+            throw new Error("Number of APIs exceeded maximum integer length!");
+        }
+
         this.apiID = APIStrategy.apiCounter++;
     }
 
