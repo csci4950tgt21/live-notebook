@@ -34,13 +34,14 @@ export abstract class APIStrategy {
         // Reset the API Counter on configuration update
         ConfigManager.getConfigManager().onDidUpdateConfiguration(() => APIStrategy.apiCounter = 0);
 
+        // Increment api counter, set the apiID
+        this.apiID = APIStrategy.apiCounter++;
+
         // Overflow protection
         if (APIStrategy.apiCounter < 0) {
             APIStrategy.apiCounter = 0;
             throw new Error("Number of APIs exceeded maximum integer length!");
         }
-
-        this.apiID = APIStrategy.apiCounter++;
     }
 
     /**
