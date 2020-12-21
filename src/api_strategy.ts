@@ -40,6 +40,7 @@ export abstract class APIStrategy {
         // Overflow protection
         if (APIStrategy.apiCounter < 0) {
             APIStrategy.apiCounter = 0;
+            this.apiID = 0;
             throw new Error("Number of APIs exceeded maximum integer length!");
         }
     }
