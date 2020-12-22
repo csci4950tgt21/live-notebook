@@ -1,97 +1,49 @@
-import APIKEYS from "./apiKEYS";
-import axios from 'axios';
+import { APIStrategy } from "./api_strategy";
+import ConfigManager from "./config_manager";
 
 const FormData = require('form-data');
 
-type response = {
-    status: number,
-    body: {
-        type: string,
-        string: string,
-    }
+export type CommonDataModel = {
+    api_name: string,
+    last_modification_date?: number | string,
+    last_analysis_stats?: {
+        harmless?: number,
+        malicious?: number,
+        suspicious?: number,
+        timeout?: number,
+        undetected?: number,
+    },
+    reputation?: number,
+    tags?: Array<string>,
+    total_votes?: {
+        harmless?: number,
+        malicious?: number,
+    },
+    whois?: string,
+    link_self?: string,
+    type?: string,
+    harmful?: string | boolean | JSON
 }
 
 export class APICalls {
-    private cachedResultsIP: Map<string, string>;
-    private cachedResultsURL: Map<string, string>;
+    private strategies: APIStrategy[];
 
     constructor() {
-        this.cachedResultsIP = new Map();
-        this.cachedResultsURL = new Map();
+        this.strategies = ConfigManager.getConfigManager().getAPIStrategies();
+        ConfigManager.getConfigManager().onDidUpdateConfiguration(() => this.strategies = ConfigManager.getConfigManager().getAPIStrategies());
     }
 
-    public getIPdata(ipaddress: string): Promise<any> {
-        let cacheHit = this.cachedResultsIP.get(ipaddress);
-        if (cacheHit) {
-            console.log("CACHE HIT");
-            return new Promise((resolve, _) => {
-                resolve(cacheHit);
-            });
-        } else {
-            return new Promise((resolve, _) => {
-                resolve("### IP Address");
-            });;
-        }
-    }
-
-
-
-    public async getURLdata(url: string): Promise<any> {
-        let response = "";
-        let cacheHit = this.cachedResultsURL.get(url);
-
-        if (cacheHit) {
-            console.log("Cache Hit");
-            return cacheHit;
-        } 
-        else {
-            let api_url = "https://www.virustotal.com/api/v3/urls";
-            var vt_key = APIKEYS.getVirusTotalKey();
-            let post_resp = {
-                data: {
-                    id: -1,
-                },
-            };
-            var formData = new FormData();
-            formData.append("url", url);
-            let virus_total_header = {
-                headers: {
-                    ...formData.getHeaders(),
-                    "x-apikey": vt_key, //the token is a variable which holds the token
-                },
-            };
-            let resolve = async (resp: any) => {
-                this.cachedResultsURL.set(url, "Processing");
-                post_resp.data = resp.data.data;
-                let url_id = post_resp.data.id;
-                console.log(url_id);
-                if (url_id != undefined) {
-                    let new_api_url =
-                        "https://www.virustotal.com/api/v3/analyses/" + url_id;
-                    let resolve = (resp: any) => {
-                        if (resp.data.data.attributes.status === "completed") {
-                            let stats = resp.data.data.attributes.stats;
-                            var date = new Date(resp.data.data.attributes.date * 1000); 
-                            response =
-                                "### Last Analyzed Time: \n"+ date.toString() +" \n ### Last Analysis Stats \n\n " +
-                                JSON.stringify(stats);
-                        }
-                        this.cachedResultsURL.set(url, response);
-                        return response;
-                    };
-                    return await axios
-                        .get(new_api_url, virus_total_header)
-                        .then(resolve);
-                } else {
-                    return "### URL NOT FOUND";
-                }
-            }
-            return await axios
-                .post(api_url, formData, virus_total_header).then(resolve, (err: any) => {
-                    console.error(err);
-                    return err.message;
-                });
-        }
+    /**
+     * Filter through strategies to get apis
+     * that can be called on the given type of token, and
+     * will then return a promise array of Common Data Model responses.
+     * @param type The type of token being passed, url, ip, etc...
+     * @param token The token being sent to the APIs
+     */
+    public async getResponse(type: string, token: string): Promise<PromiseSettledResult<CommonDataModel>[]> {
+        // Cache is managed entirely in the strategies themselves.
+        return Promise.allSettled(this.strategies.filter((strategy) => strategy.getTokenTypes().includes(type))
+            .map(async function (strategy) { return await strategy.getResponse(token); }));
     }
 }
 
