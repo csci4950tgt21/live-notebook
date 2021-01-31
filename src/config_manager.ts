@@ -1,4 +1,3 @@
-import { config } from 'process';
 import * as vscode from 'vscode';
 import { APIStrategy } from './api_strategy';
 import { GetStrategy } from './get_strategy';
@@ -55,20 +54,38 @@ export class ConfigManager {
      */
     public getAPIStrategies() {
         // Access the configuration
-        let apiArray: any = this.configuration.get('apis');
+        let rawApiArray: any = this.configuration.get('apis');
+        let safeApiArray = new Array<any>(0);
 
-        // Create a new array of api strategies
-        let strategies = new Array<APIStrategy>(apiArray.length);
-        for (let i = 0; i < strategies.length; i++) {
-            switch (apiArray[i].method) {
+        // Check the raw config data for errors,
+        // only add apis that appear to be configured correctly,
+        // cannot account for all user error here, other checks must be done elsewhere.
+        for (let i = 0; i < rawApiArray.length; i++) {
+            safeApiArray.push(rawApiArray[i]);
+        }
+
+        let strategies = new Array<APIStrategy>(0);
+        // Convert safe config data into their strategies.
+        for (let i = 0; i < safeApiArray.length; i++) {
+            switch (safeApiArray[i].method) {
                 case "POST":
-                    strategies[i] = new PostStrategy(apiArray[i]);
+
+                    if (!safeApiArray[i].body) vscode.window.showWarningMessage("WARNING: Body undefined for: " + safeApiArray[i].name + ", and it is using " +
+                        "a POST request, so it may be missing information.");
+                    strategies.push(new PostStrategy(safeApiArray[i]));
+
                     break;
                 case "GET":
-                    strategies[i] = new GetStrategy(apiArray[i]);
+
+                    if (safeApiArray[i].body) vscode.window.showWarningMessage("WARNING: Body defined for: " + safeApiArray[i].name + ", however it is using " +
+                        "a GET request, so this information will not be used.");
+                    strategies.push(new GetStrategy(safeApiArray[i]));
+
                     break;
                 case "VirusTotal":
-                    strategies[i] = new VirusTotalStrategy(apiArray[i]);
+
+                    strategies.push(new VirusTotalStrategy(safeApiArray[i]));
+                    
                     break;
             }
         }

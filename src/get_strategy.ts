@@ -2,6 +2,7 @@ import Axios from "axios";
 import { APIStrategy } from "./api_strategy";
 const FormData = require('form-data');
 var _ = require('lodash');
+import * as vscode from 'vscode';
 
 /**
  * The API Strategy for GET requests.
@@ -23,13 +24,6 @@ export class GetStrategy extends APIStrategy {
                 ...configHeaders
             },
         };
-
-        // Get the body from the configuration
-        let configBody = _.has(withToken,"body") ? withToken.body : undefined;
-
-        // Get requests do not use bodies, log warning if one exists.
-        if (configBody) console.log("WARNING: Body defined for: " + this.apiJSON.name + ", however it is using " +
-                                    "a GET request, so this information will not be used.");
 
         // Get data, replace string of interest with the token, add in the headers from the config
         let retval = await Axios.get(withToken.url, config);

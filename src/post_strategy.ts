@@ -27,10 +27,6 @@ export class PostStrategy extends APIStrategy {
         // Get the body from the configuration
         let configBody = _.has(withToken, "body") ? withToken.body : undefined;
 
-        // Post requests usually use bodies, log warning if one does not exist.
-        if (!configBody) console.log("WARNING: Body undefined for: " + this.apiJSON.name + ", and it is using " +
-            "a POST request, so it may be missing information.");
-
         let retval = await axios.post(withToken.url + "?" + new URLSearchParams(withToken.query), configBody, config);
 
         // Cache the data for the token
