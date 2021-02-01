@@ -61,7 +61,49 @@ export class ConfigManager {
         // only add apis that appear to be configured correctly,
         // cannot account for all user error here, other checks must be done elsewhere.
         for (let i = 0; i < rawApiArray.length; i++) {
-            safeApiArray.push(rawApiArray[i]);
+            // Boolean representing if an error has been found
+            let safe = true;
+            // A list of errors as strings
+            let errors = [];
+            let name = "UNNAMED API";
+            
+            if (!rawApiArray[i].name) {
+                errors.push("| Must define a name field |");
+                safe = false;
+            } else {
+                name = rawApiArray[i].name;
+            }
+
+            if (!rawApiArray[i].url) {
+                errors.push("| Must define a url field |");
+                safe = false;
+            }
+
+            if (!rawApiArray[i].method) {
+                errors.push("| Must define a method field, ex: POST, GET |");
+                safe = false;
+            }
+
+            if (!rawApiArray[i].type) {
+                errors.push("| Must define a type field |");
+                safe = false;
+            }
+
+            if (!rawApiArray[i].mapping) {
+                errors.push("| Must define a mapping field |");
+                safe = false;
+            }
+
+            if (safe) {
+                // Push the API, it is safe to use.
+                safeApiArray.push(rawApiArray[i]);
+            } else {
+                // Do not push the API, show the user the error(s).
+                vscode.window.showErrorMessage(
+                    "API CONFIG ERROR, " + name + ": " + errors.reduce((before,current,i) => 
+                        i == 0 ? current : before + " , " + current)
+                );
+            }
         }
 
         let strategies = new Array<APIStrategy>(0);
@@ -70,14 +112,14 @@ export class ConfigManager {
             switch (safeApiArray[i].method) {
                 case "POST":
 
-                    if (!safeApiArray[i].body) vscode.window.showWarningMessage("WARNING: Body undefined for: " + safeApiArray[i].name + ", and it is using " +
+                    if (!safeApiArray[i].body) vscode.window.showWarningMessage("CONFIG WARNING: Body undefined for: " + safeApiArray[i].name + ", and it is using " +
                         "a POST request, so it may be missing information.");
                     strategies.push(new PostStrategy(safeApiArray[i]));
 
                     break;
                 case "GET":
 
-                    if (safeApiArray[i].body) vscode.window.showWarningMessage("WARNING: Body defined for: " + safeApiArray[i].name + ", however it is using " +
+                    if (safeApiArray[i].body) vscode.window.showWarningMessage("CONFIG WARNING: Body defined for: " + safeApiArray[i].name + ", however it is using " +
                         "a GET request, so this information will not be used.");
                     strategies.push(new GetStrategy(safeApiArray[i]));
 
@@ -85,7 +127,7 @@ export class ConfigManager {
                 case "VirusTotal":
 
                     strategies.push(new VirusTotalStrategy(safeApiArray[i]));
-                    
+
                     break;
             }
         }
