@@ -11,6 +11,10 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(
 		vscode.languages.registerHoverProvider("plaintext", new NotebookHoverProvider(new TokenMatcher(), new APICalls()))
 	);
+	// context.subscriptions.push(
+	// 	vscode.languages.registerCodeActionsProvider('markdown', new Emojizer(), {
+	// 		providedCodeActionKinds: Emojizer.providedCodeActionKinds
+	// 	}));
 }
 
 // this method is called when your extension is deactivated

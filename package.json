@@ -81,7 +81,12 @@
 								}
 							},
 							"mapping": {
-								"link_self": [ "matches", 0, "threat", "url" ],
+								"link_self": [
+									"matches",
+									0,
+									"threat",
+									"url"
+								],
 								"type": "matches[0].threatEntryType"
 							}
 						},
