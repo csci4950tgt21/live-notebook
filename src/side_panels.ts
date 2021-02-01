@@ -10,23 +10,17 @@ export class SidePanels {
         this.HTMLParser = new HTMLParser();
     }
 
-    getHTML(stringOfInterest: string, apiResponse: Promise<any> ){
-        return apiResponse.then((value) => { 
-            return "<h1> The URL is "+stringOfInterest + " </h1> <br> <br> "+ value;
-        });
-    };
-
-    addSidePanel(stringOfInterest: string, apiResponse:  Promise<any>){
+    addSidePanel(stringOfInterest: string, apiResponse:  any){
         var sidePaneltemp = vscode.window.createWebviewPanel(stringOfInterest, stringOfInterest, vscode.ViewColumn.Two, {});
         sidePaneltemp.webview.html=this.HTMLParser.getHTML(stringOfInterest, apiResponse);
         sidePaneltemp.onDidDispose(()=>{this.sidePanels.delete(stringOfInterest)}, null);
         this.sidePanels.set(stringOfInterest, sidePaneltemp);
     };
 
-    onHoverFocus(stringOfInterest: string, apiResponse: Promise<any>){
+    onHoverFocus(stringOfInterest: string, apiResponse: any){
         var sidePaneltemp = this.sidePanels.get(stringOfInterest);
         if (sidePaneltemp){
-            this.getHTML(stringOfInterest, apiResponse).then((value)=> {sidePaneltemp.webview.html = value});
+            sidePaneltemp.webview.html=this.HTMLParser.getHTML(stringOfInterest, apiResponse);
             sidePaneltemp.reveal();
         }
         else{

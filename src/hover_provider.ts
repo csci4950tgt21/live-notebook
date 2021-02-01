@@ -26,7 +26,7 @@ class NotebookHoverProvider implements vscode.HoverProvider {
             if (type !== undefined) response = this.apiCalls.getResponse(type, token);
             else return null;
 
-            this.sidePanels.onHoverFocus(token, response);
+            //this.sidePanels.onHoverFocus(token, response);
             // return a formatted common data model response
             // TODO Change to a dynamic configuration driven response
             return response.then((resArr: PromiseSettledResult<CommonDataModel>[]) => {
