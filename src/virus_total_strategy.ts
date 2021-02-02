@@ -19,7 +19,7 @@ export default class VirusTotalStrategy extends APIStrategy {
         let cacheResult = <any>cache.getCachedValue(cacheKey);
 
         // If the cache is a completed VT response, return it
-        if (cacheResult && !(cacheResult.liveNotebookIDFlag) && cacheResult.attributes.status === "completed") {
+        if (cacheResult && !(cacheResult.liveNotebookIDFlag)) {
             return cacheResult;
         }
         // The cache is for an ID, resolve the ID w/ virus total analysis
@@ -30,12 +30,16 @@ export default class VirusTotalStrategy extends APIStrategy {
             // Get the result
             let VTResult = await getPromise.then((resp: any) => resp);
 
-            // Replace the old cached id, with the new analysis response
-            // we strip off the data tag on VT in our mapping, but
-            // we could just cache VTResult and it would work the same.
-            cache.replaceValue(cacheKey, VTResult.data);
+            if(VTResult.data.attributes.status !== "queued") {
+                // Replace the old cached id, with the new analysis response
+                // we strip off the data tag on VT in our mapping, but
+                // we could just cache VTResult and it would work the same.
+                cache.replaceValue(cacheKey, VTResult.data);
+            }
 
-            return cache.getCachedValue(cacheKey);
+            // This can return queued data, which will show up as zeroes,
+            // which is better than showing no information.
+            return VTResult.data;
         } 
         // We don't have a cached result or id, make initial call to virus total for an ID
         else {
