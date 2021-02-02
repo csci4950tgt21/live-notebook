@@ -23,7 +23,7 @@ export default class VirusTotalStrategy extends APIStrategy {
             return cacheResult;
         }
         // The cache is for an ID, resolve the ID w/ virus total analysis
-        else if (cacheResult && (cacheResult.liveNotebookIDFlag || cacheResult.attributes.status === "queued")) {
+        else if (cacheResult && cacheResult.liveNotebookIDFlag) {
             // Make a get request with the id, to see if we have valid data yet.
             let getPromise = this.getVTIDResponse(cache.getCachedValue(cacheKey).id);
 
@@ -36,7 +36,6 @@ export default class VirusTotalStrategy extends APIStrategy {
                 // we could just cache VTResult and it would work the same.
                 cache.replaceValue(cacheKey, VTResult.data);
             }
-
             // This can return queued data, which will show up as zeroes,
             // which is better than showing no information.
             return VTResult.data;
@@ -45,7 +44,6 @@ export default class VirusTotalStrategy extends APIStrategy {
         else {
             // Make the post request
             let postPromise = this.postVTToken(token);
-
             if (postPromise === undefined) {
                 console.error("Failed to get Virus Total URL result, token was: "+token);
                 return undefined;
