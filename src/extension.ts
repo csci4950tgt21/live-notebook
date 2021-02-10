@@ -10,17 +10,25 @@ import { SidePanels } from "./side_panels";
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+
+	let myAPICalls: APICalls = new APICalls();
+
+	// Push the main hover provider
 	context.subscriptions.push(
-		vscode.languages.registerHoverProvider("plaintext", new NotebookHoverProvider(new TokenMatcher(), new APICalls()))
+		vscode.languages.registerHoverProvider("plaintext", new NotebookHoverProvider(new TokenMatcher(), myAPICalls))
 	);
+
+	// Push the extended results provider
 	context.subscriptions.push(
 		vscode.languages.registerCodeActionsProvider('plaintext', new ExtendedResultsProvider())
 	);
+	
+	
 	const command = "liveNotebook.openSideBar";
-	let tempSideBar = new SidePanels();
+	let tempSideBar = new SidePanels(myAPICalls);
 
 	const commandHandle = (stringOfInterest: string) => {
-		tempSideBar.onHoverFocus(stringOfInterest, undefined);
+		tempSideBar.onHoverFocus(stringOfInterest);
 	};
 
 	context.subscriptions.push(vscode.commands.registerCommand(command, commandHandle));

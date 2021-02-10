@@ -28,9 +28,15 @@ export type CommonDataModel = {
 export class APICalls {
     private strategies: APIStrategy[];
 
+    // Strategy for the sidebar
+    private sideBarStrategy: APIStrategy | undefined;
+
     constructor() {
         this.strategies = ConfigManager.getConfigManager().getAPIStrategies();
         ConfigManager.getConfigManager().onDidUpdateConfiguration(() => this.strategies = ConfigManager.getConfigManager().getAPIStrategies());
+
+        this.sideBarStrategy = ConfigManager.getConfigManager().getSidePanelStrategy();
+        ConfigManager.getConfigManager().onDidUpdateConfiguration(() => this.sideBarStrategy = ConfigManager.getConfigManager().getSidePanelStrategy());
     }
 
     /**
@@ -44,6 +50,25 @@ export class APICalls {
         // Cache is managed entirely in the strategies themselves.
         return Promise.allSettled(this.strategies.filter((strategy) => strategy.getTokenTypes().includes(type))
             .map(async function (strategy) { return await strategy.getResponse(token); }));
+    }
+
+    public async getSidePanelResponse(token: string): Promise<CommonDataModel> {
+        let failureResponse: CommonDataModel = {
+            api_name: "Side Panel API Undefined In Configuration",
+            last_modification_date: undefined,
+            last_analysis_stats: undefined,
+            reputation: undefined,
+            tags: undefined,
+            total_votes: undefined,
+            whois: "Side Panel API Undefined In Configuration",
+            link_self: undefined,
+            type: undefined,
+            harmful: undefined
+        }
+        if (this.sideBarStrategy === undefined) {
+            return failureResponse;
+        }
+        return await this.sideBarStrategy.getResponse(token);
     }
 }
 

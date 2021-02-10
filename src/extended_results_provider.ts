@@ -29,8 +29,6 @@ export class ExtendedResultsProvider implements vscode.CodeActionProvider {
 		fix.command = {command: "liveNotebook.openSideBar", title : "Testing", tooltip: "Testing2", arguments: [stringOfInterest]};
 		return fix;
 	}
-
-
 }
 
 export default ExtendedResultsProvider;

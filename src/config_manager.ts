@@ -50,11 +50,78 @@ export class ConfigManager {
      * Access the config file in package.json
      * and load in the APIs as their respective calling
      * strategies/methods.
-     * @returns An array of API strategies
+     * DOES NOT load sidebar strategies.
+     * @returns An array of api strategies
      */
     public getAPIStrategies() {
-        // Access the configuration
         let rawApiArray: any = this.configuration.get('apis');
+        let safeApiArray = this.sanitizeAPIs(rawApiArray);
+
+        let strategies = new Array<APIStrategy>(0);
+        // Convert safe config data into their strategies.
+        for (let i = 0; i < safeApiArray.length; i++) {
+            if(!safeApiArray[i].isSidePanelAPI || safeApiArray[i].isSidePanelAPI !== true) {
+                let newStrategy = this.toStrategy(safeApiArray[i]);
+                if (newStrategy !== undefined) {
+                    strategies.push(<APIStrategy>newStrategy);
+                }
+            }
+        }
+        return strategies;
+    }
+
+    /**
+     * @returns One sidepanel strategy if any side panel strategies exist in the config, may return undefined
+     */
+    public getSidePanelStrategy() {
+        let rawApiArray: any = this.configuration.get('apis');
+        let sidePanelAPIArray = new Array<any>(0);
+        for (let i = 0; i < rawApiArray.length; i++) {
+            if (rawApiArray[i].isSidePanelAPI && rawApiArray[i].isSidePanelAPI === true) {
+                sidePanelAPIArray.push(rawApiArray[i]);
+            }
+        }
+        let safeApiArray = this.sanitizeAPIs(sidePanelAPIArray);
+        return this.toStrategy(safeApiArray[0]);
+    }
+
+    /**
+     * Convert an API's JSON into an appropriate strategy for API call usage.
+     * @param myAPI The api to be converted into a strategy.
+     */
+    public toStrategy (myAPI: any) : APIStrategy | undefined {
+        if (!myAPI || !myAPI.method)
+            return undefined;
+
+        switch (myAPI.method) {
+            case "POST":
+                if (!myAPI.body) vscode.window.showWarningMessage("CONFIG WARNING: Body undefined for: " + myAPI.name + ", and it is using " +
+                    "a POST request, so it may be missing information.");
+                return new PostStrategy(myAPI);
+
+            case "GET":
+                if (myAPI.body) vscode.window.showWarningMessage("CONFIG WARNING: Body defined for: " + myAPI.name + ", however it is using " +
+                    "a GET request, so this information will not be used.");
+                return new GetStrategy(myAPI);
+
+            case "VirusTotal":
+                return new VirusTotalStrategy(myAPI);
+
+            default:
+                return undefined;
+        }
+    }
+
+    /**
+     * Return a sanitized list of usable APIs,
+     * reject all APIs that do not define the required fields.
+     * @param rawApiArray The unsanitized array of APIs
+     */
+    public sanitizeAPIs(rawApiArray: any) {
+        if (!rawApiArray)
+            return new Array<any>(0);
+
+        // Access the configuration
         let safeApiArray = new Array<any>(0);
 
         // Check the raw config data for errors,
@@ -105,33 +172,7 @@ export class ConfigManager {
                 );
             }
         }
-
-        let strategies = new Array<APIStrategy>(0);
-        // Convert safe config data into their strategies.
-        for (let i = 0; i < safeApiArray.length; i++) {
-            switch (safeApiArray[i].method) {
-                case "POST":
-
-                    if (!safeApiArray[i].body) vscode.window.showWarningMessage("CONFIG WARNING: Body undefined for: " + safeApiArray[i].name + ", and it is using " +
-                        "a POST request, so it may be missing information.");
-                    strategies.push(new PostStrategy(safeApiArray[i]));
-
-                    break;
-                case "GET":
-
-                    if (safeApiArray[i].body) vscode.window.showWarningMessage("CONFIG WARNING: Body defined for: " + safeApiArray[i].name + ", however it is using " +
-                        "a GET request, so this information will not be used.");
-                    strategies.push(new GetStrategy(safeApiArray[i]));
-
-                    break;
-                case "VirusTotal":
-
-                    strategies.push(new VirusTotalStrategy(safeApiArray[i]));
-
-                    break;
-            }
-        }
-        return strategies;
+        return safeApiArray;
     }
 }
 export default ConfigManager;
