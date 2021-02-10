@@ -16,21 +16,21 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
 
-  Build-Pipeline-Ubuntu-20.04:
+  Build-Pipeline-Ubuntu-20:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
       - name: NPM Package Installation
         run: npm install
         
-  Build-Pipeline-Ubuntu-18.04:
+  Build-Pipeline-Ubuntu-18:
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
       - name: NPM Package Installation
         run: npm install
           
-  Build-Pipeline-Ubuntu-16.04:
+  Build-Pipeline-Ubuntu-16:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -51,14 +51,14 @@ jobs:
       - name: NPM Package Installation
         run: npm install
  
-  Build-Pipeline-MacOS-11.0:
+  Build-Pipeline-MacOS-11:
       runs-on: macos-11.0
       steps:
         - uses: actions/checkout@v2
         - name: NPM Package Installation
           run: npm install
  
-  Build-Pipeline-MacOS-10.15:
+  Build-Pipeline-MacOS-10:
       runs-on: macos-10.15
       steps:
         - uses: actions/checkout@v2
