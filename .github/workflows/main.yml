@@ -22,13 +22,17 @@ jobs:
       - uses: actions/checkout@v2
       - name: NPM Package Installation
         run: npm install
-        
+      - name: Build
+        run: npm run compile
+    
   Build-Pipeline-Ubuntu-18:
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
       - name: NPM Package Installation
         run: npm install
+      - name: Build
+        run: npm run compile
           
   Build-Pipeline-Ubuntu-16:
     runs-on: ubuntu-20.04
@@ -36,6 +40,8 @@ jobs:
       - uses: actions/checkout@v2
       - name: NPM Package Installation
         run: npm install
+      - name: Build
+        run: npm run compile
         
   Build-Pipeline-Windows-2019:
       runs-on: windows-2019
@@ -43,6 +49,8 @@ jobs:
         - uses: actions/checkout@v2
         - name: NPM Package Installation
           run: npm install
+        - name: Build
+          run: npm run compile
   
   Build-Pipeline-Windows-2016:
     runs-on: windows-2016
@@ -50,6 +58,8 @@ jobs:
       - uses: actions/checkout@v2
       - name: NPM Package Installation
         run: npm install
+      - name: Build
+        run: npm run compile
  
   Build-Pipeline-MacOS-10:
       runs-on: macos-10.15
@@ -57,3 +67,5 @@ jobs:
         - uses: actions/checkout@v2
         - name: NPM Package Installation
           run: npm install
+        - name: Build
+          run: npm run compile
