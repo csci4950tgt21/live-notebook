@@ -28,6 +28,8 @@ export class GetStrategy extends APIStrategy {
         // Get data, replace string of interest with the token, add in the headers from the config
         let retval = await Axios.get(withToken.url, config);
 
+        console.log(retval.data);
+
         // Cache the data for the token
         cache.insertValue(this.getCacheKey(token), retval.data);
 

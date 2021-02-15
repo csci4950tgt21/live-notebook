@@ -66,6 +66,9 @@ export abstract class APIStrategy {
      */
     protected abstract getRawResponse(token: string): Promise<any>;
 
+    public getAPIRawResponse(token: string): Promise<any> {
+        return this.getRawResponse(token);
+    }
     /**
      * Use the api specific mapping from the api json to map from the
      * api response to the common data model.

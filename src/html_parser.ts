@@ -15,7 +15,7 @@ export class HTMLParser{
      * @returns An instance of the common data model, usually with the whois field filled with data.
      */
     public getSidePanelData(myWebView: vscode.WebviewPanel, token: string) {
-        this.apiCalls.getSidePanelResponse(token).then( function(result)
+        this.apiCalls.getSideBarRawResponse(token).then( function(result)
             {myWebView.webview.html = HTMLParser.parseHTML(result)}
         );
     }

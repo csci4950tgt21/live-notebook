@@ -58,9 +58,8 @@
 								"EMAIL"
 							],
 							"mapping":{
-								"whois":"WhoisRecord.registryData.rawText"
 							},
-							"isSidePanelAPI": true 
+							"isSidePanelAPI": true
 						},
 						{
 							"name": "Google Safe Browsing",

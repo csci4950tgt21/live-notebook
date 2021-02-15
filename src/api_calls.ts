@@ -52,6 +52,13 @@ export class APICalls {
             .map(async function (strategy) { return await strategy.getResponse(token); }));
     }
 
+    public getSideBarRawResponse(token: string): Promise<any>{
+        if(this.sideBarStrategy !== undefined){
+            return this.sideBarStrategy.getAPIRawResponse(token);
+        }
+        return Promise.resolve("{Undefined sidebar strategy}");
+    }
+
     public async getSidePanelResponse(token: string): Promise<CommonDataModel> {
         let failureResponse: CommonDataModel = {
             api_name: "Side Panel API Undefined In Configuration",
