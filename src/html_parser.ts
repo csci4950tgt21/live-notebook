@@ -15,12 +15,15 @@ export class HTMLParser{
      * @returns An instance of the common data model, usually with the whois field filled with data.
      */
     public getSidePanelData(myWebView: vscode.WebviewPanel, token: string) {
-        this.apiCalls.getSideBarRawResponse(token).then( function(result)
-            {myWebView.webview.html = HTMLParser.parseHTML(result)}
-        );
+        this.apiCalls.getSideBarRawResponse(token).then( 
+            function(result)
+            {
+                myWebView.webview.html = HTMLParser.parseHTML(result)
+            });
     }
 
     static parseHTML(result: CommonDataModel){
+        console.log(result)
         return JSON.stringify(result);
     }
 }
