@@ -22,9 +22,43 @@ export class HTMLParser{
             });
     }
 
-    static parseHTML(result: CommonDataModel){
-        console.log(result)
-        return JSON.stringify(result);
+    static parseHTML(result: any){
+        
+        let finalHTMLstring = "<html>";
+        finalHTMLstring += "<table style=\"width:100%\">";
+        finalHTMLstring += "<tr>";
+        finalHTMLstring += "    <th> Key </th>";
+        finalHTMLstring += "    <th> Value </th>";
+        finalHTMLstring += "</tr>";
+
+        for (let key in result.WhoisRecord) {
+            if ((key !== "registrant") && (key !== "audit") && (key !== "rawText") && (key !== "strippedText")){
+                finalHTMLstring += "<tr>";
+                finalHTMLstring += "<td>" + key +"</td>";
+                finalHTMLstring += "<td>" + result.WhoisRecord[key] +"</td>";
+                finalHTMLstring += "</tr>";
+            }
+        }
+
+        for (let key in result.WhoisRecord.registrant) {
+            if (key != "rawText"){
+                finalHTMLstring += "<tr>";
+                finalHTMLstring += "<td>" + key +"</td>";
+                finalHTMLstring += "<td>" + result.WhoisRecord.registrant[key] +"</td>";
+                finalHTMLstring += "</tr>";
+            }
+        }
+        for (let key in result.WhoisRecord.audit) {
+            if (key != "rawText"){
+                finalHTMLstring += "<tr>";
+                finalHTMLstring += "<td>" + key +"</td>";
+                finalHTMLstring += "<td>" + result.WhoisRecord.audit[key] +"</td>";
+                finalHTMLstring += "</tr>";
+            }
+        }
+        finalHTMLstring += "</table>"
+        finalHTMLstring += "</html>"
+        return finalHTMLstring;
     }
 }
 

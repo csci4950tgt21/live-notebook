@@ -57,8 +57,7 @@
 								"IP",
 								"EMAIL"
 							],
-							"mapping":{
-							},
+							"mapping": {},
 							"isSidePanelAPI": true
 						},
 						{
