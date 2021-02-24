@@ -11,9 +11,17 @@ export interface Cache<T>{
 
     /**
      * Insert a value.
+     * @param cacheKey The unique caching key
      * @param value The value to be inserted
      */
     insertValue(cacheKey: any, value: T) : void;
+
+    /**
+     * Replace an existing value.
+     * @param cacheKey The unique caching key
+     * @param value The new value
+     */
+    replaceValue(cacheKey: any, value: T) : void;
 
     /**
      * Clear the cache.
