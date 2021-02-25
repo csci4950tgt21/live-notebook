@@ -25,7 +25,7 @@ jobs:
       - name: Build
         run: npm run compile
       - name: Run Test
-        run: yarn test
+        run: npm test
     
   Build-Pipeline-Ubuntu-18:
     runs-on: ubuntu-18.04
@@ -36,7 +36,7 @@ jobs:
       - name: Build
         run: npm run compile
       - name: Run Test
-        run: yarn test
+        run: npm test
           
   Build-Pipeline-Ubuntu-16:
     runs-on: ubuntu-20.04
@@ -47,7 +47,7 @@ jobs:
       - name: Build
         run: npm run compile
       - name: Run Test
-        run: yarn test
+        run: npm test
 
   Build-Pipeline-Windows-2019:
       runs-on: windows-2019
@@ -58,7 +58,7 @@ jobs:
         - name: Build
           run: npm run compile
         - name: Run Test
-          run: yarn test
+          run: npm test
   
   Build-Pipeline-Windows-2016:
     runs-on: windows-2016
@@ -69,7 +69,7 @@ jobs:
       - name: Build
         run: npm run compile
       - name: Run Test
-        run: yarn test
+        run: npm test
 
   Build-Pipeline-MacOS-10:
       runs-on: macos-10.15
@@ -80,4 +80,4 @@ jobs:
         - name: Build
           run: npm run compile
         - name: Run Test
-          run: yarn test
+          run: npm test
