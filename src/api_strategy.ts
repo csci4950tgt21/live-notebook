@@ -66,6 +66,9 @@ export abstract class APIStrategy {
      */
     protected abstract getRawResponse(token: string): Promise<any>;
 
+    public getAPIRawResponse(token: string): Promise<any> {
+        return this.getRawResponse(token);
+    }
     /**
      * Use the api specific mapping from the api json to map from the
      * api response to the common data model.
@@ -114,14 +117,14 @@ export abstract class APIStrategy {
         return "{" + this.apiID + "} " + lookupVal;
     }
 
-    private static apiCache: Cache<JSON>;
+    private static apiCache: Cache<any>;
     /**
      * Allows access to a universal cache
      * for all strategies to share. Strategies should
      * use getCacheKey when inserting and retrieving
      * values from the cache.
      */
-    protected static getSharedCache(): Cache<JSON> {
+    protected static getSharedCache(): Cache<any> {
         if (!this.apiCache) {
             this.apiCache = new MapCache();
             ConfigManager.getConfigManager().onDidUpdateConfiguration(() => this.apiCache.clearCache());

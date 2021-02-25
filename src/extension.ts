@@ -19,14 +19,18 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(
 		vscode.languages.registerHoverProvider("plaintext", new NotebookHoverProvider(globalMatcher, apiCalls))
 	);
+
+	// Push the extended results provider
 	context.subscriptions.push(
 		vscode.languages.registerCodeActionsProvider('plaintext', new ExtendedResultsProvider())
 	);
+	
+	
 	const command = "liveNotebook.openSideBar";
-	let tempSideBar = new SidePanels();
+	let tempSideBar = new SidePanels(myAPICalls);
 
 	const commandHandle = (stringOfInterest: string) => {
-		tempSideBar.onHoverFocus(stringOfInterest, undefined);
+		tempSideBar.onHoverFocus(stringOfInterest);
 	};
 
 	context.subscriptions.push(vscode.commands.registerCommand(command, commandHandle));

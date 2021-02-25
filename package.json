@@ -49,6 +49,18 @@
 					"order": 1,
 					"default": [
 						{
+							"name": "WhoIsXmlAPI",
+							"url": "https://www.whoisxmlapi.com/whoisserver/WhoisService?apiKey=at_eK7TFzDjujemroNcccq6A4ScXF0HN&domainName={live-notebook.stringOfInterest}&outputFormat=JSON",
+							"method": "GET",
+							"type": [
+								"URL",
+								"IP",
+								"EMAIL"
+							],
+							"mapping": {},
+							"isSidePanelAPI": true
+						},
+						{
 							"name": "Google Safe Browsing",
 							"url": "https://safebrowsing.googleapis.com/v4/threatMatches:find",
 							"method": "POST",
@@ -185,6 +197,7 @@
 		"axios": "^0.21.1",
 		"form-data": "^3.0.0",
 		"lodash": "^4.17.20",
-		"promise": "^8.1.0"
+		"promise": "^8.1.0",
+		"yarn": "^1.22.10"
 	}
 }
