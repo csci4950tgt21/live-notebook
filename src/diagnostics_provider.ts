@@ -40,7 +40,8 @@ export default class DiagnositcsProvider {
                 s => {
                     var li = line.indexOf(s);
                     while (li != -1) {
-                        const diagnostic: Diagnostic = new Diagnostic(new vscode.Range(i, li, i, li + s.length), this.matcher.matchToken(s) ?? "undefined type", vscode.DiagnosticSeverity.Information);
+                        const diagnostic: Diagnostic = new Diagnostic(new vscode.Range(i, li, i, li + s.length),
+                                                                     (this.matcher.matchToken(s) ?? "undefined type") + " - " + s, vscode.DiagnosticSeverity.Information);
                         diagnostics.push(diagnostic);
                         li = line.indexOf(s, li + 1);
                     }

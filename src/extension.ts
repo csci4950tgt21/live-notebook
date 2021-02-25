@@ -27,7 +27,7 @@ export function activate(context: vscode.ExtensionContext) {
 	
 	
 	const command = "liveNotebook.openSideBar";
-	let tempSideBar = new SidePanels(myAPICalls);
+	let tempSideBar = new SidePanels(apiCalls);
 
 	const commandHandle = (stringOfInterest: string) => {
 		tempSideBar.onHoverFocus(stringOfInterest);
