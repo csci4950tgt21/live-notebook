@@ -81,7 +81,12 @@
 								}
 							},
 							"mapping": {
-								"link_self": [ "matches", 0, "threat", "url" ],
+								"link_self": [
+									"matches",
+									0,
+									"threat",
+									"url"
+								],
 								"type": "matches[0].threatEntryType"
 							}
 						},
@@ -180,6 +185,7 @@
 		"axios": "^0.21.1",
 		"form-data": "^3.0.0",
 		"lodash": "^4.17.20",
-		"promise": "^8.1.0"
+		"promise": "^8.1.0",
+		"yarn": "^1.22.10"
 	}
 }
