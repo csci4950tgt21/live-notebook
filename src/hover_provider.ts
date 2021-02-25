@@ -1,14 +1,17 @@
 import * as vscode from 'vscode';
 import { TokenMatcher } from "./token_matcher";
 import { APICalls, CommonDataModel } from "./api_calls";
+import {SidePanels} from "./side_panels";
 
 class NotebookHoverProvider implements vscode.HoverProvider {
     tokenMatcher: TokenMatcher;
     apiCalls: APICalls;
+    sidePanels: SidePanels;
 
     constructor(tokenMatcher: TokenMatcher, apiCalls: APICalls) {
         this.tokenMatcher = tokenMatcher;
         this.apiCalls = apiCalls;
+        this.sidePanels = new SidePanels(apiCalls);
     }
 
     provideHover(doc: vscode.TextDocument, pos: vscode.Position, tok: vscode.CancellationToken): vscode.ProviderResult<vscode.Hover> {
@@ -23,6 +26,7 @@ class NotebookHoverProvider implements vscode.HoverProvider {
             if (type !== undefined) response = this.apiCalls.getResponse(type, token);
             else return null;
 
+            //this.sidePanels.onHoverFocus(token, response);
             // return a formatted common data model response
             // TODO Change to a dynamic configuration driven response
             return response.then((resArr: PromiseSettledResult<CommonDataModel>[]) => {
