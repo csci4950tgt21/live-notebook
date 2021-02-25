@@ -25,7 +25,7 @@ jobs:
       - name: Build
         run: npm run compile
       - name: Run Test
-        run: npm test
+        run: yarn test
     
   Build-Pipeline-Ubuntu-18:
     runs-on: ubuntu-18.04
