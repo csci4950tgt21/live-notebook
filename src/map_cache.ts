@@ -26,6 +26,5 @@ export class MapCache<T> implements Cache<T> {
 
     clearCache(): void {
         this.cacheMap.clear();
-        console.log("Cleared cache");
     }
 }
