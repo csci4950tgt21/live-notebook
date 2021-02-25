@@ -25,9 +25,9 @@ jobs:
       - name: Build
         run: npm run compile
       - name: Setup Display Var
-        run: export DISPLAY=':99.0'
-      - name: d1
-        run: Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+        run: sudo apt-get install xvfb
+      - name: T  
+        run: xvfb-run --auto-servernum npm test
       - name: Run Test
         run: yarn test
     
