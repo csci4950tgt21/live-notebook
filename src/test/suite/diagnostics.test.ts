@@ -5,7 +5,7 @@ import sinon from "ts-sinon";
 import * as tsSinon from "ts-sinon";
 import DiagnositcsProvider from '../../diagnostics_provider';
 
-suite('GetStrategy Test Suite',
+suite('Diagnostics (Highlights) Test Suite',
     () => {
         const mockContext = { ...tsSinon.stubInterface<vscode.ExtensionContext>(), subscriptions: [] };
         sinon.stub(mockContext, "subscriptions").value([]);
