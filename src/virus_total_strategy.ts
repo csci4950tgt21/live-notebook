@@ -1,8 +1,5 @@
 import { APIStrategy } from "./api_strategy";
 import axios from 'axios';
-import { CommonDataModel } from "./api_calls";
-import { Console } from "console";
-import { resolve } from "promise";
 const FormData = require('form-data');
 
 /**
