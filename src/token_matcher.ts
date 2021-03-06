@@ -31,15 +31,9 @@ export class TokenMatcher {
      * Load regexes and their types from user settings
      */
     public loadConfig() {
-        try{
-            // Load the regexes in the ConfigManager class
-            this.regexes = ConfigManager.getConfigManager().getTypedRegexes();
-            ConfigManager.getConfigManager().onDidUpdateConfiguration(() => this.regexes = ConfigManager.getConfigManager().getTypedRegexes());
-            return true;
-        }
-        catch{
-            return false;
-        }
+        // Load the regexes in the ConfigManager class
+        this.regexes = ConfigManager.getConfigManager().getTypedRegexes();
+        ConfigManager.getConfigManager().onDidUpdateConfiguration(() => this.regexes = ConfigManager.getConfigManager().getTypedRegexes());
     }
 
     /**

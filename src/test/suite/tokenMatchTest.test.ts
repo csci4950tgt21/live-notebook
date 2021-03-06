@@ -12,9 +12,9 @@ suite('Token Matcher Test Suite', () => {
 	
 	test("matchToken loadConfig",()=>{
 		// Test matchToken URL
-		assert.strictEqual(tokenMatcher.loadConfig(), true);
+		assert.doesNotThrow(() => tokenMatcher.loadConfig())
 	});
-
+	
 	test("matchToken URL",()=>{
 		// Test matchToken URL
 		assert.strictEqual(tokenMatcher.matchToken("target.com"),"URL");
