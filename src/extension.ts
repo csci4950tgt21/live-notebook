@@ -1,5 +1,3 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import { TokenMatcher } from "./token_matcher"
 import NotebookHoverProvider from "./hover_provider";
@@ -24,8 +22,8 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(
 		vscode.languages.registerCodeActionsProvider('plaintext', new ExtendedResultsProvider())
 	);
-	
-	
+
+
 	const command = "liveNotebook.openSideBar";
 	let tempSideBar = new SidePanels(apiCalls);
 
@@ -36,8 +34,7 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(vscode.commands.registerCommand(command, commandHandle));
 
 	// context.subscriptions.push(vscode.getDisposable());
-	let highlights = vscode.languages.createDiagnosticCollection('highlights');
-	new DiagnositcsProvider(globalMatcher).subscribeToDocumentChanges(context, highlights);
+	new DiagnositcsProvider(context, globalMatcher);
 }
 
 // this method is called when your extension is deactivated

@@ -7,12 +7,11 @@ import APICalls, { CommonDataModel } from '../../api_calls';
 import NotebookHoverProvider from '../../hover_provider';
 import * as tsSinon from "ts-sinon";
 import { expectation } from 'sinon';
-let sinon = require("sinon");
+import sinon from "ts-sinon";
 
 suite('Hover Test Suite',
     () => {
         const mockMatcher = tsSinon.stubConstructor(TokenMatcher);
-        mockMatcher.matchToken.returns("TEST TYPE");
         mockMatcher.matchToken.withArgs("TEST TEXT").returns("TEST TYPE");
         const mockAPICalls = tsSinon.stubConstructor(APICalls);
         mockAPICalls.getResponse.returns(Promise.allSettled(
