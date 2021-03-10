@@ -65,17 +65,6 @@ jobs:
           run: npm run compile
         - name: Run Test
           run: npm test
-  
-  Build-Pipeline-Windows-2016:
-    runs-on: windows-2016
-    steps:
-      - uses: actions/checkout@v2
-      - name: NPM Package Installation
-        run: npm install
-      - name: Build
-        run: npm run compile
-      - name: Run Test
-        run: npm test
 
   Build-Pipeline-MacOS-10:
       runs-on: macos-10.15
