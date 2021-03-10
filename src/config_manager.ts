@@ -10,25 +10,41 @@ import VirusTotalStrategy from './virus_total_strategy';
  * The configuration can be found in package.json.
  */
 export class ConfigManager {
-    // Singleton instance of the config manager
-    private static myConfigManager: ConfigManager;
+    // The name of the configuration section, allows us to reacquire the
+    // configuration when it is updated by the user
+    private configName : string;
+
+    // The vscode loaded configuration
     private configuration: vscode.WorkspaceConfiguration;
+
+    // The list of functions to be called when the configuration manager updates
     private onUpdates: Function[];
 
-    private constructor() {
-        this.configuration = vscode.workspace.getConfiguration('live-notebook');
+    constructor(configuration: vscode.WorkspaceConfiguration, configName : string = 'live-notebook') {
+        // Set the vscode configuration
+        this.configuration = configuration;
+
+        if (!configuration)
+        {
+            throw new Error("ConfigManager was fed a null vscode configuration!");
+        }
+
+        // Set the configuration name, for updating purposes
+        this.configName = configName;
+
+        if (!configName)
+        {
+            configName = 'live-notebook';
+        }
+
+        // Set up list for automatic configuration updates
         this.onUpdates = [];
+
+        // Reload the configuration when it changes, and run updates for subscribed classes
         vscode.workspace.onDidChangeConfiguration(() => {
-            this.configuration = vscode.workspace.getConfiguration('live-notebook');
+            this.configuration = vscode.workspace.getConfiguration(this.configName);
             this.onUpdates.forEach(f => f());
         });
-    }
-    /**
-     * @returns The singleton instance of ConfigManager
-     */
-    public static getConfigManager() {
-        if (!ConfigManager.myConfigManager) ConfigManager.myConfigManager = new ConfigManager();
-        return ConfigManager.myConfigManager;
     }
 
     /**
@@ -55,6 +71,12 @@ export class ConfigManager {
      */
     public getAPIStrategies() {
         let rawApiArray: any = this.configuration.get('apis');
+
+        // Check that rawApiArray exists
+        if (!rawApiArray) {
+            throw new Error("WARNING, apis field does not exist in configuration!");
+        }
+
         let safeApiArray = this.sanitizeAPIs(rawApiArray);
 
         let strategies = new Array<APIStrategy>(0);
@@ -75,6 +97,12 @@ export class ConfigManager {
      */
     public getSidePanelStrategy() {
         let rawApiArray: any = this.configuration.get('apis');
+
+        // Check that rawApiArray exists
+        if (!rawApiArray) {
+            throw new Error("WARNING, apis field does not exist in configuration!");
+        }
+
         let sidePanelAPIArray = new Array<any>(0);
         for (let i = 0; i < rawApiArray.length; i++) {
             if (rawApiArray[i].isSidePanelAPI && rawApiArray[i].isSidePanelAPI === true) {

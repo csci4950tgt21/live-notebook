@@ -1,19 +1,25 @@
 import * as assert from 'assert';
 import * as vscode from 'vscode';
-import { Cache } from "../../cache";
-import { MapCache } from "../../map_cache";
 import TokenMatcher from '../../token_matcher';
 import APICalls, { CommonDataModel } from '../../api_calls';
 import NotebookHoverProvider from '../../hover_provider';
 import * as tsSinon from "ts-sinon";
-import { expectation } from 'sinon';
-import sinon from "ts-sinon";
+import ConfigManager from '../../config_manager';
 
 suite('Hover Test Suite',
     () => {
-        const mockMatcher = tsSinon.stubConstructor(TokenMatcher);
+        // Mock config manager to pass to apicalls and token matcher, necessary for test to run
+        let mockVSCodeConfig = tsSinon.stubInterface<vscode.WorkspaceConfiguration>();
+        mockVSCodeConfig.get.returns(
+            {"apis" : [],
+             "regexes" : []}
+        );
+	    const configManager : ConfigManager = new ConfigManager(mockVSCodeConfig, "fake name, not used in testing");
+
+        const mockMatcher = tsSinon.stubConstructor(TokenMatcher,configManager);
         mockMatcher.matchToken.withArgs("TEST TEXT").returns("TEST TYPE");
-        const mockAPICalls = tsSinon.stubConstructor(APICalls);
+
+        const mockAPICalls = tsSinon.stubConstructor(APICalls,configManager);
         mockAPICalls.getResponse.returns(Promise.allSettled(
             [Promise.resolve(<CommonDataModel>{
                 api_name: "TEST API"
