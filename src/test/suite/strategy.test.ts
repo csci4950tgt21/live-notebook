@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 import * as vscode from 'vscode';
 import * as tsSinon from "ts-sinon";
-import TestStrategy from '../../test_strategy';
+import TestStrategy from '../test_strategy';
 import APICalls from '../../api_calls';
 
 suite('Strategy Test Suite',() => {

@@ -1,4 +1,4 @@
-import { APIStrategy } from "./api_strategy";
+import { APIStrategy } from "../api_strategy";
 import axios from 'axios';
 
 /**
