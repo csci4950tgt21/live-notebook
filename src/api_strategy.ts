@@ -48,16 +48,6 @@ export abstract class APIStrategy {
     }
 
     /**
-     * A function to be called by API_Calls,
-     * this couples the two classes tightly for now,
-     * a potential fix would be to pass in the API ID
-     * from outside the class. API Factory in config manager or API calls, etc
-     */
-    public static resetAPICounter(){
-        this.apiCounter = 0;
-    }
-
-    /**
      * Get the common data model response
      * @param token The parsed text token, for example a URL.
      */
@@ -147,7 +137,23 @@ export abstract class APIStrategy {
      * Another tightly coupled method to
      * be called from API_Calls
      */
-    public static clearAPICache(){
+    private static clearAPICache(){
         this.apiCache.clearCache();
+    }
+
+    /**
+     * A function to be called by API_Calls,
+     * this couples the two classes tightly for now,
+     * a potential fix would be to pass in the API ID
+     * from outside the class. API Factory in config manager or API calls, etc
+     */
+    private static resetAPICounter(){
+        this.apiCounter = 0;
+    }
+
+    // Reset API Strategies static cache & counter
+    public static resetAPIStrategies(){
+        this.clearAPICache();
+        this.resetAPICounter();
     }
 }

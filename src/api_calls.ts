@@ -45,10 +45,7 @@ export class APICalls {
 
         // Reset the API counter for api_strategy, TODO: create API factory class, and manage ids there instead of here
         // Reset the API Counter on configuration update
-        this.configManager.onDidUpdateConfiguration(() => APIStrategy.resetAPICounter);
-
-        // Clear the API strategy cache, also too tightly coupled, TODO: find a fix
-        this.configManager.onDidUpdateConfiguration(() => APIStrategy.clearAPICache);
+        this.configManager.onDidUpdateConfiguration(() => {APIStrategy.resetAPIStrategies();});
 
         // Load the strategies, and set them so they are reloaded when the configuration changes
         this.strategies = this.configManager.getAPIStrategies();
