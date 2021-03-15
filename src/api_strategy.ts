@@ -23,36 +23,19 @@ export abstract class APIStrategy {
     // used for caching
     protected apiID: number;
 
-    // The static counter used for creating a unique API ID
-    // NOT THREAD SAFE
-    private static apiCounter = 0;
-
-    constructor(apiJSON: any) {
+    constructor(apiJSON: any, apiID : number) {
         this.apiJSON = apiJSON;
 
         // Increment api counter, set the apiID
-        this.apiID = APIStrategy.getNextApiID();
-    }
-
-    /**
-     * @returns The next api ID, incremented by 1 each time
-     */
-    private static getNextApiID(): number {
-        APIStrategy.apiCounter++;
-        // Overflow protection
-        if (APIStrategy.apiCounter < 0) {
-            APIStrategy.apiCounter = 0;
-            throw new Error("Number of APIs exceeded maximum integer length!");
-        }
-        return APIStrategy.apiCounter;
+        this.apiID = apiID;
     }
 
     /**
      * Get the common data model response
      * @param token The parsed text token, for example a URL.
      */
-    public async getResponse(token: string): Promise<CommonDataModel> {
-        return this.asCommonDataModel(await this.getRawResponse(token));
+    public async getResponse(token: string, apiCache: Cache<any>): Promise<CommonDataModel> {
+        return this.asCommonDataModel(await this.getRawResponse(token, apiCache));
     }
 
     /**
@@ -66,11 +49,17 @@ export abstract class APIStrategy {
      * The raw response interface function
      * @param token The parsed text token, for example a URL.
      */
-    protected abstract getRawResponse(token: string): Promise<any>;
+    protected abstract getRawResponse(token: string, apiCache: Cache<any>): Promise<any>;
 
-    public getAPIRawResponse(token: string): Promise<any> {
-        return this.getRawResponse(token);
+    /**
+     * Used in the side bar, return a response not fitted to the common data model.
+     * @param token The matched token.
+     * @returns The raw API response.
+     */
+    public getAPIRawResponse(token: string, apiCache: Cache<any>): Promise<any> {
+        return this.getRawResponse(token, apiCache);
     }
+
     /**
      * Use the api specific mapping from the api json to map from the
      * api response to the common data model.
@@ -117,43 +106,5 @@ export abstract class APIStrategy {
      */
     protected getCacheKey(lookupVal: string): string {
         return "{" + this.apiID + "} " + lookupVal;
-    }
-
-    private static apiCache: Cache<any>;
-    /**
-     * Allows access to a universal cache
-     * for all strategies to share. Strategies should
-     * use getCacheKey when inserting and retrieving
-     * values from the cache.
-     */
-    protected static getSharedCache(): Cache<any> {
-        if (!this.apiCache) {
-            this.apiCache = new MapCache();
-        }
-        return this.apiCache;
-    }
-
-    /**
-     * Another tightly coupled method to
-     * be called from API_Calls
-     */
-    private static clearAPICache(){
-        this.apiCache.clearCache();
-    }
-
-    /**
-     * A function to be called by API_Calls,
-     * this couples the two classes tightly for now,
-     * a potential fix would be to pass in the API ID
-     * from outside the class. API Factory in config manager or API calls, etc
-     */
-    private static resetAPICounter(){
-        this.apiCounter = 0;
-    }
-
-    // Reset API Strategies static cache & counter
-    public static resetAPIStrategies(){
-        this.clearAPICache();
-        this.resetAPICounter();
     }
 }

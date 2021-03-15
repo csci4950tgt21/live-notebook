@@ -1,8 +1,6 @@
 import { APIStrategy } from "./api_strategy";
 import axios from 'axios';
-import { CommonDataModel } from "./api_calls";
-import { Console } from "console";
-import { resolve } from "promise";
+import { Cache } from "./cache";
 const FormData = require('form-data');
 
 /**
@@ -12,9 +10,16 @@ const FormData = require('form-data');
  * calls. As well as the usage of form data for post.
  */
 export default class VirusTotalStrategy extends APIStrategy {
-    protected async getRawResponse(token: string): Promise<any> {
+    protected async getRawResponse(token: string, cache: Cache<any>): Promise<any> {
+
+        // VirusTotalStrategy is highly coupled with cacheing due to the nature
+        // of its two required api calls. Thus, it will not operate without cache.
+        if (!cache) {
+            console.log("VIRUS TOTAL STRATEGY WILL NOT WORK WITHOUT CACHE!");
+            return {"ERROR" : "NO CACHE"}
+        }
+
         // Set up caching
-        let cache = APIStrategy.getSharedCache();
         let cacheKey = this.getCacheKey(token);
         let cacheResult = <any>cache.getCachedValue(cacheKey);
 

@@ -1,5 +1,8 @@
 import { APIStrategy } from "./api_strategy";
+import { Cache } from "./cache";
 import ConfigManager from "./config_manager";
+import { MapCache } from "./map_cache";
+import { StrategyFactory } from "./strategy_factory";
 
 const FormData = require('form-data');
 
@@ -32,8 +35,14 @@ export class APICalls {
     // Strategy for the sidebar
     private sideBarStrategy: APIStrategy | undefined;
 
-    // The configuration manager to load api strategies from
+    // The configuration manager to add call backs to when the config changes
     private configManager : ConfigManager;
+
+    // The strategy factory to load strategies from
+    private strategyFactory : StrategyFactory;
+
+    // The cache for strategies to use
+    private apiCache: Cache<any>;
 
     constructor(configManager : ConfigManager) {
         this.configManager = configManager;
@@ -43,17 +52,23 @@ export class APICalls {
             throw new Error("APICalls was fed a null configuration manager!");
         }
 
-        // Reset the API counter for api_strategy, TODO: create API factory class, and manage ids there instead of here
-        // Reset the API Counter on configuration update
-        this.configManager.onDidUpdateConfiguration(() => {APIStrategy.resetAPIStrategies();});
+        // Create a new strategy factory with the config
+        // MUST BE DONE BEFORE ADDING METHODS TO onDidUpdateConfiguration
+        this.strategyFactory = new StrategyFactory(configManager);
 
-        // Load the strategies, and set them so they are reloaded when the configuration changes
-        this.strategies = this.configManager.getAPIStrategies();
-        this.configManager.onDidUpdateConfiguration(() => this.strategies = this.configManager.getAPIStrategies());
+        // Create a new Cache to be used by strategy calls
+        this.apiCache = new MapCache();
 
-        // Load the sidebarstrategy, and set it so it reloades when the configuration changes
-        this.sideBarStrategy = this.configManager.getSidePanelStrategy();
-        this.configManager.onDidUpdateConfiguration(() => this.sideBarStrategy = this.configManager.getSidePanelStrategy());
+        // Reset the centralized cache when the configuration updates.
+        this.configManager.onDidUpdateConfiguration(() => {this.apiCache.clearCache()});
+
+        // Load the strategies, and set them so they are reloaded when the configuration changes.
+        this.strategies = this.strategyFactory.manufactureStrategyArray();
+        this.configManager.onDidUpdateConfiguration(() => this.strategies = this.strategyFactory.manufactureStrategyArray());
+
+        // Load the sidebarstrategy, and set it so it reloades when the configuration changes.
+        this.sideBarStrategy = this.strategyFactory.manufactureSidePanelStrategy();
+        this.configManager.onDidUpdateConfiguration(() => this.sideBarStrategy = this.strategyFactory.manufactureSidePanelStrategy());
     }
 
     /**
@@ -64,14 +79,15 @@ export class APICalls {
      * @param token The token being sent to the APIs
      */
     public async getResponse(type: string, token: string): Promise<PromiseSettledResult<CommonDataModel>[]> {
+        let myCache : Cache<any> = this.apiCache;
         // Cache is managed entirely in the strategies themselves.
         return Promise.allSettled(this.strategies.filter((strategy) => strategy.getTokenTypes().includes(type))
-            .map(async function (strategy) { return await strategy.getResponse(token); }));
+            .map(async function (strategy) { return await strategy.getResponse(token, myCache); }));
     }
 
     public getSideBarRawResponse(token: string): Promise<any>{
         if(this.sideBarStrategy !== undefined){
-            return this.sideBarStrategy.getAPIRawResponse(token);
+            return this.sideBarStrategy.getAPIRawResponse(token, this.apiCache);
         }
         return Promise.resolve("{Undefined sidebar strategy}");
     }
@@ -92,7 +108,7 @@ export class APICalls {
         if (this.sideBarStrategy === undefined) {
             return failureResponse;
         }
-        return await this.sideBarStrategy.getResponse(token);
+        return await this.sideBarStrategy.getResponse(token, this.apiCache);
     }
 }
 
