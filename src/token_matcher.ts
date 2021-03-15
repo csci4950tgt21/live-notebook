@@ -1,3 +1,4 @@
+import { Console } from 'console';
 import { type } from 'os';
 import * as vscode from 'vscode';
 import { ConfigManager } from './config_manager';
@@ -20,10 +21,13 @@ export type TypedRegex = {
 export class TokenMatcher {
     // The array of regex and type pairs.
     private regexes: Array<TypedRegex> = [];
+    // The configuration the tokenmatcher uses for its regular expressions
+    private configManager : ConfigManager;
 
     // The constructor initalizes the regexes array by loading data
     // from user settings.
-    constructor() {
+    constructor(configManager : ConfigManager) {
+        this.configManager = configManager;
         this.loadConfig();
     }
 
@@ -31,9 +35,14 @@ export class TokenMatcher {
      * Load regexes and their types from user settings
      */
     public loadConfig() {
+        if (this.configManager == null)
+        {
+            console.log("Null ConfigManager in tokenmatcher!");
+            return;
+        }
         // Load the regexes in the ConfigManager class
-        this.regexes = ConfigManager.getConfigManager().getTypedRegexes();
-        ConfigManager.getConfigManager().onDidUpdateConfiguration(() => this.regexes = ConfigManager.getConfigManager().getTypedRegexes());
+        this.regexes = this.configManager.getTypedRegexes();
+        this.configManager.onDidUpdateConfiguration(() => this.regexes = this.configManager.getTypedRegexes());
     }
 
     /**

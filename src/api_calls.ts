@@ -26,17 +26,34 @@ export type CommonDataModel = {
 }
 
 export class APICalls {
+    // The list of strategies to use
     private strategies: APIStrategy[];
 
     // Strategy for the sidebar
     private sideBarStrategy: APIStrategy | undefined;
 
-    constructor() {
-        this.strategies = ConfigManager.getConfigManager().getAPIStrategies();
-        ConfigManager.getConfigManager().onDidUpdateConfiguration(() => this.strategies = ConfigManager.getConfigManager().getAPIStrategies());
+    // The configuration manager to load api strategies from
+    private configManager : ConfigManager;
 
-        this.sideBarStrategy = ConfigManager.getConfigManager().getSidePanelStrategy();
-        ConfigManager.getConfigManager().onDidUpdateConfiguration(() => this.sideBarStrategy = ConfigManager.getConfigManager().getSidePanelStrategy());
+    constructor(configManager : ConfigManager) {
+        this.configManager = configManager;
+
+        if (!configManager)
+        {
+            throw new Error("APICalls was fed a null configuration manager!");
+        }
+
+        // Reset the API counter for api_strategy, TODO: create API factory class, and manage ids there instead of here
+        // Reset the API Counter on configuration update
+        this.configManager.onDidUpdateConfiguration(() => {APIStrategy.resetAPIStrategies();});
+
+        // Load the strategies, and set them so they are reloaded when the configuration changes
+        this.strategies = this.configManager.getAPIStrategies();
+        this.configManager.onDidUpdateConfiguration(() => this.strategies = this.configManager.getAPIStrategies());
+
+        // Load the sidebarstrategy, and set it so it reloades when the configuration changes
+        this.sideBarStrategy = this.configManager.getSidePanelStrategy();
+        this.configManager.onDidUpdateConfiguration(() => this.sideBarStrategy = this.configManager.getSidePanelStrategy());
     }
 
     /**

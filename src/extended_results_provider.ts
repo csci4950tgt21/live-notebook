@@ -3,17 +3,22 @@ import * as vscode from 'vscode';
 import { TokenMatcher } from "./token_matcher";
 
 export class ExtendedResultsProvider implements vscode.CodeActionProvider {
+	// The token matcher, matches tokens found in documents
+    private tokenMatcher : TokenMatcher;
+
+	constructor(tokenMatcher : TokenMatcher) {
+		this.tokenMatcher = tokenMatcher
+	}
 
 	public static readonly providedCodeActionKinds = [
 		vscode.CodeActionKind.QuickFix
 	];
 
 	provideCodeActions(document: vscode.TextDocument, range: vscode.Range | vscode.Selection, context: vscode.CodeActionContext, tok: vscode.CancellationToken): vscode.ProviderResult<(vscode.CodeAction | vscode.Command)[]> {
-		let tempMatcherObj = new TokenMatcher();
 		var matchRange: vscode.Range | undefined = document.getWordRangeAtPosition(range.start, /\S+/);
 		if (matchRange !== undefined) {
 			var token: string = document.getText(matchRange);
-			var type: string | undefined = tempMatcherObj.matchToken(token);
+			var type: string | undefined = this.tokenMatcher.matchToken(token);
 			if (type !== undefined) {
 				console.log("Inside provideCode Actions");
 				console.log(token);

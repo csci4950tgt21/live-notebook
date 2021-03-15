@@ -4,6 +4,7 @@ import TokenMatcher from '../../token_matcher';
 import sinon from "ts-sinon";
 import * as tsSinon from "ts-sinon";
 import DiagnositcsProvider from '../../diagnostics_provider';
+import ConfigManager from '../../config_manager';
 
 suite('Diagnostics (Highlights) Test Suite',
     () => {
@@ -15,7 +16,15 @@ suite('Diagnostics (Highlights) Test Suite',
         onDidChangeTextDocument.returns(tsSinon.stubConstructor(vscode.Disposable));
         const onDidCloseTextDocument = sinon.stub(vscode.workspace, "onDidCloseTextDocument").returns(tsSinon.stubConstructor(vscode.Disposable));
         onDidCloseTextDocument.returns(tsSinon.stubConstructor(vscode.Disposable));
-        const mockMatcher = tsSinon.stubConstructor(TokenMatcher);
+
+        // Mock config manager to pass to  token matcher, necessary for test to run
+        let mockVSCodeConfig = tsSinon.stubInterface<vscode.WorkspaceConfiguration>();
+        mockVSCodeConfig.get.returns(
+            {"regexes" : []}
+        );
+	    const configManager : ConfigManager = new ConfigManager(mockVSCodeConfig, "fake name, not used in testing");
+
+        const mockMatcher = tsSinon.stubConstructor(TokenMatcher, configManager);
         mockMatcher.matchToken.withArgs("TEST TEXT").returns("TEST TYPE");
         const diagnosticsProvider = new DiagnositcsProvider(mockContext, mockMatcher);
 

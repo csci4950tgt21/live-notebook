@@ -1,7 +1,6 @@
 import { CommonDataModel } from "./api_calls"
 import { Cache } from "./cache";
 import { MapCache } from "./map_cache";
-import ConfigManager from "./config_manager";
 var _ = require('lodash');
 
 /**
@@ -31,18 +30,21 @@ export abstract class APIStrategy {
     constructor(apiJSON: any) {
         this.apiJSON = apiJSON;
 
-        // Reset the API Counter on configuration update
-        ConfigManager.getConfigManager().onDidUpdateConfiguration(() => APIStrategy.apiCounter = 0);
-
         // Increment api counter, set the apiID
-        this.apiID = APIStrategy.apiCounter++;
+        this.apiID = APIStrategy.getNextApiID();
+    }
 
+    /**
+     * @returns The next api ID, incremented by 1 each time
+     */
+    private static getNextApiID(): number {
+        APIStrategy.apiCounter++;
         // Overflow protection
         if (APIStrategy.apiCounter < 0) {
             APIStrategy.apiCounter = 0;
-            this.apiID = 0;
             throw new Error("Number of APIs exceeded maximum integer length!");
         }
+        return APIStrategy.apiCounter;
     }
 
     /**
@@ -127,8 +129,31 @@ export abstract class APIStrategy {
     protected static getSharedCache(): Cache<any> {
         if (!this.apiCache) {
             this.apiCache = new MapCache();
-            ConfigManager.getConfigManager().onDidUpdateConfiguration(() => this.apiCache.clearCache());
         }
         return this.apiCache;
+    }
+
+    /**
+     * Another tightly coupled method to
+     * be called from API_Calls
+     */
+    private static clearAPICache(){
+        this.apiCache.clearCache();
+    }
+
+    /**
+     * A function to be called by API_Calls,
+     * this couples the two classes tightly for now,
+     * a potential fix would be to pass in the API ID
+     * from outside the class. API Factory in config manager or API calls, etc
+     */
+    private static resetAPICounter(){
+        this.apiCounter = 0;
+    }
+
+    // Reset API Strategies static cache & counter
+    public static resetAPIStrategies(){
+        this.clearAPICache();
+        this.resetAPICounter();
     }
 }
