@@ -3,12 +3,17 @@ import * as vscode from 'vscode';
 import * as tsSinon from "ts-sinon";
 import TestStrategy from '../test_strategy';
 import APICalls from '../../api_calls';
+import { Cache } from '../../cache';
+import { MapCache } from '../../map_cache';
 
 suite('Strategy Test Suite',() => {
     /*
     Set up for strategy testing
     */
-    const testStrategy : TestStrategy = new TestStrategy(
+    const mockedCache : Cache<any> = new MapCache();
+
+    const mockedID : number = 1;
+    const testStrategy : TestStrategy = new TestStrategy (
     {
         "name": "Test Strategy",
         "type": [
@@ -28,8 +33,7 @@ suite('Strategy Test Suite',() => {
                 "malicious": "attributes.stats.malicious"
             }
         }
-    }
-    );
+    }, mockedID);
     
     // Test the getTokenTypes method
     test("getTokenTypes",()=>{
@@ -42,7 +46,7 @@ suite('Strategy Test Suite',() => {
     const myToken3 : string = "thirdToken";
 
     test("getRawAPIResponse", async ()=>{
-        const result = await testStrategy.getAPIRawResponse(myToken);
+        const result = await testStrategy.getAPIRawResponse(myToken, mockedCache);
         assert.deepStrictEqual(result,
         {
             "attributes":{
@@ -61,13 +65,13 @@ suite('Strategy Test Suite',() => {
     // Test the new values entered into the cache (which was just filled from the first getRaw call) for
     // the test strategies secret cache value.
     test("getRawAPIResponse - Cache", async()=>{
-        const result = await testStrategy.getAPIRawResponse(myToken);
+        const result = await testStrategy.getAPIRawResponse(myToken, mockedCache);
         assert.deepStrictEqual(result, "Secret cached result");
     });
 
     // Test that the cache does not carry over to a different token
     test("getRaw - Cacheless", async ()=>{
-        const result = await testStrategy.getAPIRawResponse(myToken2);
+        const result = await testStrategy.getAPIRawResponse(myToken2, mockedCache);
         assert.deepStrictEqual(result,
         {
             "attributes":{
@@ -85,7 +89,7 @@ suite('Strategy Test Suite',() => {
 
     // Test that the common data model formatting works correctly
     test("getResponse - (CDM)", async()=>{
-        const result = await testStrategy.getResponse(myToken3);
+        const result = await testStrategy.getResponse(myToken3, mockedCache);
         assert.deepStrictEqual(result,
         {
             "api_name": "Test Strategy",
