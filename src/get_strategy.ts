@@ -2,7 +2,6 @@ import Axios from "axios";
 import { APIStrategy } from "./api_strategy";
 const FormData = require('form-data');
 var _ = require('lodash');
-import * as vscode from 'vscode';
 import { Cache } from "./cache";
 
 /**

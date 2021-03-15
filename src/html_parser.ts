@@ -18,13 +18,14 @@ export class HTMLParser{
         this.apiCalls.getSideBarRawResponse(token).then( 
             function(result)
             {
-                myWebView.webview.html = HTMLParser.parseHTML(result)
+                myWebView.webview.html = HTMLParser.parseHTML(result, token)
             });
     }
 
-    static parseHTML(result: any){
-        
+    static parseHTML(result: any, url: string){
+        console.log(result);
         let finalHTMLstring = "<html>";
+        finalHTMLstring += "<h2> WHOIS Data: " + url + "</h2>";
         finalHTMLstring += "<table style=\"width:100%\">";
         finalHTMLstring += "<tr>";
         finalHTMLstring += "    <th> Key </th>";
