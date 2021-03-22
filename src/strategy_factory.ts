@@ -22,6 +22,7 @@ export class StrategyFactory {
     constructor(configManager : ConfigManager){
         // Set the API data according to the config
         this.setApiArray(configManager.getAPIData());
+        this.setSideBarArray(configManager.getSidePanelData());
 
         // Have the config reset the API data when it is changed
         configManager.onDidUpdateConfiguration(() => {this.setApiArray(configManager.getAPIData())});

@@ -144,7 +144,7 @@ export class ConfigManager {
                 safe = false;
             }
 
-            if (!rawApiArray[i].mapping) {
+            if (!rawApiArray[i].mapping && !(rawApiArray[i].isSidePanelAPI && rawApiArray[i].isSidePanelAPI === true)) {
                 errors.push("| Must define a mapping field |");
                 safe = false;
             }
