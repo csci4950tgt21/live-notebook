@@ -158,7 +158,7 @@ suite('VirusTotal Strategy Test Suite',() => {
     });
 
     test("Results Correctly Cached", () => {
-        queryResult3.then((myResult) => {
+        queryResult4.then((myResult) => {
             assert.notStrictEqual(cache.getCachedValue(cacheKey).id, 100);
             assert.strictEqual(myResult.last_analysis_stats?.harmless, 5);
             assert.strictEqual(myResult.last_analysis_stats?.malicious, 10);
