@@ -10,7 +10,7 @@ suite('Strategy Test Suite',() => {
     /*
     Set up for strategy testing
     */
-    const mockedCache : Cache<any> = new MapCache();
+    const cache : Cache<any> = new MapCache();
 
     const mockedID : number = 1;
     const testStrategy : TestStrategy = new TestStrategy (
@@ -46,7 +46,7 @@ suite('Strategy Test Suite',() => {
     const myToken3 : string = "thirdToken";
 
     test("getRawAPIResponse", async ()=>{
-        const result = await testStrategy.getAPIRawResponse(myToken, mockedCache);
+        const result = await testStrategy.getAPIRawResponse(myToken, cache);
         assert.deepStrictEqual(result,
         {
             "attributes":{
@@ -65,13 +65,13 @@ suite('Strategy Test Suite',() => {
     // Test the new values entered into the cache (which was just filled from the first getRaw call) for
     // the test strategies secret cache value.
     test("getRawAPIResponse - Cache", async()=>{
-        const result = await testStrategy.getAPIRawResponse(myToken, mockedCache);
+        const result = await testStrategy.getAPIRawResponse(myToken, cache);
         assert.deepStrictEqual(result, "Secret cached result");
     });
 
     // Test that the cache does not carry over to a different token
     test("getRaw - Cacheless", async ()=>{
-        const result = await testStrategy.getAPIRawResponse(myToken2, mockedCache);
+        const result = await testStrategy.getAPIRawResponse(myToken2, cache);
         assert.deepStrictEqual(result,
         {
             "attributes":{
@@ -89,7 +89,7 @@ suite('Strategy Test Suite',() => {
 
     // Test that the common data model formatting works correctly
     test("getResponse - (CDM)", async()=>{
-        const result = await testStrategy.getResponse(myToken3, mockedCache);
+        const result = await testStrategy.getResponse(myToken3, cache);
         assert.deepStrictEqual(result,
         {
             "api_name": "Test Strategy",
