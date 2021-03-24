@@ -1,8 +1,4 @@
 import * as vscode from 'vscode';
-import { APIStrategy } from './api_strategy';
-import { GetStrategy } from './get_strategy';
-import { PostStrategy } from './post_strategy';
-import VirusTotalStrategy from './virus_total_strategy';
 
 /**
  * The config manager class manages
@@ -69,7 +65,7 @@ export class ConfigManager {
      * DOES NOT load sidebar strategies.
      * @returns An array of api strategies
      */
-    public getAPIStrategies() {
+    public getAPIData() {
         let rawApiArray: any = this.configuration.get('apis');
 
         // Check that rawApiArray exists
@@ -79,23 +75,13 @@ export class ConfigManager {
 
         let safeApiArray = this.sanitizeAPIs(rawApiArray);
 
-        let strategies = new Array<APIStrategy>(0);
-        // Convert safe config data into their strategies.
-        for (let i = 0; i < safeApiArray.length; i++) {
-            if(!safeApiArray[i].isSidePanelAPI || safeApiArray[i].isSidePanelAPI !== true) {
-                let newStrategy = this.toStrategy(safeApiArray[i]);
-                if (newStrategy !== undefined) {
-                    strategies.push(<APIStrategy>newStrategy);
-                }
-            }
-        }
-        return strategies;
+        return safeApiArray;
     }
 
     /**
-     * @returns One sidepanel strategy if any side panel strategies exist in the config, may return undefined
+     * @returns A list of side panel APIs if they exist in the configuration, may return undefined
      */
-    public getSidePanelStrategy() {
+    public getSidePanelData() : any | undefined{
         let rawApiArray: any = this.configuration.get('apis');
 
         // Check that rawApiArray exists
@@ -110,34 +96,8 @@ export class ConfigManager {
             }
         }
         let safeApiArray = this.sanitizeAPIs(sidePanelAPIArray);
-        return this.toStrategy(safeApiArray[0]);
-    }
 
-    /**
-     * Convert an API's JSON into an appropriate strategy for API call usage.
-     * @param myAPI The api to be converted into a strategy.
-     */
-    public toStrategy (myAPI: any) : APIStrategy | undefined {
-        if (!myAPI || !myAPI.method)
-            return undefined;
-
-        switch (myAPI.method) {
-            case "POST":
-                if (!myAPI.body) vscode.window.showWarningMessage("CONFIG WARNING: Body undefined for: " + myAPI.name + ", and it is using " +
-                    "a POST request, so it may be missing information.");
-                return new PostStrategy(myAPI);
-
-            case "GET":
-                if (myAPI.body) vscode.window.showWarningMessage("CONFIG WARNING: Body defined for: " + myAPI.name + ", however it is using " +
-                    "a GET request, so this information will not be used.");
-                return new GetStrategy(myAPI);
-
-            case "VirusTotal":
-                return new VirusTotalStrategy(myAPI);
-
-            default:
-                return undefined;
-        }
+        return safeApiArray;
     }
 
     /**
@@ -145,7 +105,7 @@ export class ConfigManager {
      * reject all APIs that do not define the required fields.
      * @param rawApiArray The unsanitized array of APIs
      */
-    public sanitizeAPIs(rawApiArray: any) {
+    private sanitizeAPIs(rawApiArray: any) {
         if (!rawApiArray)
             return new Array<any>(0);
 
@@ -184,7 +144,7 @@ export class ConfigManager {
                 safe = false;
             }
 
-            if (!rawApiArray[i].mapping) {
+            if (!rawApiArray[i].mapping && !(rawApiArray[i].isSidePanelAPI && rawApiArray[i].isSidePanelAPI === true)) {
                 errors.push("| Must define a mapping field |");
                 safe = false;
             }
