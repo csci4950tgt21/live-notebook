@@ -29,7 +29,12 @@ export class PostStrategy extends APIStrategy {
         // Get the body from the configuration
         let configBody = _.has(withToken, "body") ? withToken.body : undefined;
 
-        let retval = await axios.post(withToken.url + "?" + new URLSearchParams(withToken.query), configBody, config);
+        // Check if the api key is in search params
+        let keyInParams = _.has(withToken,"query");
+        let completedUrl = withToken.url;
+        if (keyInParams) completedUrl += "?" + new URLSearchParams(withToken.query);
+
+        let retval = await axios.post(completedUrl, configBody, config);
 
         // Cache the data for the token
         if (cache) cache.insertValue(this.getCacheKey(token), retval.data);
