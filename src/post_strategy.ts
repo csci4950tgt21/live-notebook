@@ -32,7 +32,16 @@ export class PostStrategy extends APIStrategy {
         // Check if the api key is in search params
         let keyInParams = _.has(withToken,"query");
         let completedUrl = withToken.url;
-        if (keyInParams) completedUrl += "?" + new URLSearchParams(withToken.query);
+
+        if (keyInParams) {
+            let mySearchParams = new URLSearchParams();
+            let configParams = withToken.query;
+
+            for (let i = 0; i < configParams.length; i++){
+                mySearchParams.append(configParams[i].name,configParams[i].value);
+            }
+            completedUrl += "?" + mySearchParams;
+        }
 
         let retval = await axios.post(completedUrl, configBody, config);
 

@@ -50,14 +50,29 @@
 					"default": [
 						{
 							"name": "WhoIsXmlAPI",
-							"url": "https://www.whoisxmlapi.com/whoisserver/WhoisService?apiKey=at_eK7TFzDjujemroNcccq6A4ScXF0HN&domainName={live-notebook.stringOfInterest}&outputFormat=JSON",
+							"url": "https://www.whoisxmlapi.com/whoisserver/WhoisService",
 							"method": "GET",
+							"query": [
+								{
+									"name" : "apiKey",
+									"value": "API_KEY_HERE"
+								},
+								{
+									"name" : "domainName",
+									"value": "{live-notebook.stringOfInterest}"
+								},
+								{
+									"name" : "outputFormat",
+									"value" : "JSON"
+								}
+								
+							],
 							"type": [
 								"URL",
 								"IP",
 								"EMAIL"
 							],
-							"isSidePanelAPI": true
+							"isSidePanelAPI": true 
 						},
 						{
 							"name": "Google Safe Browsing",
@@ -66,9 +81,12 @@
 							"type": [
 								"URL"
 							],
-							"query": {
-								"key": "{API_KEY_HERE}"
-							},
+							"query": [
+								{
+									"name" : "key",
+									"value" : "API_KEY_HERE"
+								}
+							],
 							"body": {
 								"threatInfo": {
 									"threatTypes": [
@@ -109,7 +127,7 @@
 								"IP"
 							],
 							"headers": {
-								"x-apikey": "{API_KEY_HERE}"
+								"x-apikey": "API_KEY_HERE"
 							},
 							"mapping": {
 								"last_modification_date": "data.attributes.last_modification_date",
@@ -141,7 +159,7 @@
 								"URL"
 							],
 							"headers": {
-								"x-apikey": "{API_KEY_HERE}"
+								"x-apikey": "API_KEY_HERE"
 							},
 							"mapping": {
 								"last_modification_date": "attributes.date",
