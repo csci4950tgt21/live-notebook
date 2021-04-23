@@ -29,11 +29,11 @@ export class PostStrategy extends APIStrategy {
         // Get the body from the configuration
         let configBody = _.has(withToken, "body") ? withToken.body : undefined;
 
-        // Check if the api key is in search params
-        let keyInParams = _.has(withToken,"query");
+        // Check if the API uses URLSearch Parameters
+        let searchParamsExist = _.has(withToken,"query");
         let completedUrl = withToken.url;
 
-        if (keyInParams) {
+        if (searchParamsExist) {
             let mySearchParams = new URLSearchParams();
             let configParams = withToken.query;
 
