@@ -1,8 +1,10 @@
 import Axios from "axios";
 import { APIStrategy } from "./api_strategy";
 const FormData = require('form-data');
+import { URLSearchParams } from "url";
 var _ = require('lodash');
 import { Cache } from "./cache";
+import { Console } from "console";
 
 /**
  * The API Strategy for GET requests.
@@ -26,8 +28,22 @@ export class GetStrategy extends APIStrategy {
             },
         };
 
+        // Check if the API uses URLSearch Parameters
+        let searchParamsExist = _.has(withToken,"query");
+        let completedUrl = withToken.url;
+
+        if (searchParamsExist) {
+            let mySearchParams = new URLSearchParams();
+            let configParams = withToken.query;
+
+            for (let i = 0; i < configParams.length; i++){
+                mySearchParams.append(configParams[i].name,configParams[i].value);
+            }
+            completedUrl += "?" + mySearchParams;
+        }
+
         // Get data, replace string of interest with the token, add in the headers from the config
-        let retval = await Axios.get(withToken.url, config);
+        let retval = await Axios.get(completedUrl, config);
 
         // Cache the data for the token
         if (cache) cache.insertValue(this.getCacheKey(token), retval.data);
