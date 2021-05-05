@@ -37,6 +37,7 @@ export class GetStrategy extends APIStrategy {
             for (const [k, v] of Object.entries(withToken.query)) {
                 mySearchParams.append(k, <string>v);
             }
+          
             completedUrl += "?" + mySearchParams;
         }
 

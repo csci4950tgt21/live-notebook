@@ -62,7 +62,7 @@
 								"IP",
 								"EMAIL"
 							],
-							"isSidePanelAPI": true
+							"isSidePanelAPI": true 
 						},
 						{
 							"name": "Google Safe Browsing",
