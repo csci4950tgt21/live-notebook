@@ -103,7 +103,7 @@
 									"threat",
 									"url"
 								],
-								"type": "matches[0].threatEntryType"
+								"type": "matches[0].threatType"
 							}
 						},
 						{
