@@ -30,16 +30,15 @@ export class PostStrategy extends APIStrategy {
         let configBody = _.has(withToken, "body") ? withToken.body : undefined;
 
         // Check if the API uses URLSearch Parameters
-        let searchParamsExist = _.has(withToken,"query");
         let completedUrl = withToken.url;
 
-        if (searchParamsExist) {
+        if (_.has(withToken, "query")) {
             let mySearchParams = new URLSearchParams();
-            let configParams = withToken.query;
 
-            for (let i = 0; i < configParams.length; i++){
-                mySearchParams.append(configParams[i].name,configParams[i].value);
+            for (const [k, v] of Object.entries(withToken.query)) {
+                mySearchParams.append(k, <string>v);
             }
+            
             completedUrl += "?" + mySearchParams;
         }
 

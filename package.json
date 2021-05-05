@@ -52,27 +52,17 @@
 							"name": "WhoIsXmlAPI",
 							"url": "https://www.whoisxmlapi.com/whoisserver/WhoisService",
 							"method": "GET",
-							"query": [
-								{
-									"name" : "apiKey",
-									"value": "API_KEY_HERE"
-								},
-								{
-									"name" : "domainName",
-									"value": "{live-notebook.stringOfInterest}"
-								},
-								{
-									"name" : "outputFormat",
-									"value" : "JSON"
-								}
-								
-							],
+							"query": {
+								"apiKey": "API_KEY_HERE",
+								"domainName": "{live-notebook.stringOfInterest}",
+								"outputFormat": "JSON"
+							},
 							"type": [
 								"URL",
 								"IP",
 								"EMAIL"
 							],
-							"isSidePanelAPI": true 
+							"isSidePanelAPI": true
 						},
 						{
 							"name": "Google Safe Browsing",
@@ -81,12 +71,9 @@
 							"type": [
 								"URL"
 							],
-							"query": [
-								{
-									"name" : "key",
-									"value" : "API_KEY_HERE"
-								}
-							],
+							"query": {
+								"key": "API_KEY_HERE"
+							},
 							"body": {
 								"threatInfo": {
 									"threatTypes": [
