@@ -1,6 +1,6 @@
 # Getting Started
 
-## [User Wiki](../wiki)
+## [User Wiki](https://github.com/csci4950tgt21/live-notebook/wiki)
 
 ## Maintenance & Extensibility
 
