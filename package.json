@@ -52,21 +52,11 @@
 							"name": "WhoIsXmlAPI",
 							"url": "https://www.whoisxmlapi.com/whoisserver/WhoisService",
 							"method": "GET",
-							"query": [
-								{
-									"name" : "apiKey",
-									"value": "API_KEY_HERE"
-								},
-								{
-									"name" : "domainName",
-									"value": "{live-notebook.stringOfInterest}"
-								},
-								{
-									"name" : "outputFormat",
-									"value" : "JSON"
-								}
-								
-							],
+							"query": {
+								"apiKey": "API_KEY_HERE",
+								"domainName": "{live-notebook.stringOfInterest}",
+								"outputFormat": "JSON"
+							},
 							"type": [
 								"URL",
 								"IP",
@@ -81,12 +71,9 @@
 							"type": [
 								"URL"
 							],
-							"query": [
-								{
-									"name" : "key",
-									"value" : "API_KEY_HERE"
-								}
-							],
+							"query": {
+								"key": "API_KEY_HERE"
+							},
 							"body": {
 								"threatInfo": {
 									"threatTypes": [
@@ -116,7 +103,7 @@
 									"threat",
 									"url"
 								],
-								"type": "matches[0].threatEntryType"
+								"type": "matches[0].threatType"
 							}
 						},
 						{
