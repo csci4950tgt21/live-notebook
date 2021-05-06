@@ -6,12 +6,10 @@ import {SidePanels} from "./side_panels";
 class NotebookHoverProvider implements vscode.HoverProvider {
     tokenMatcher: TokenMatcher;
     apiCalls: APICalls;
-    sidePanels: SidePanels;
 
     constructor(tokenMatcher: TokenMatcher, apiCalls: APICalls) {
         this.tokenMatcher = tokenMatcher;
         this.apiCalls = apiCalls;
-        this.sidePanels = new SidePanels(apiCalls);
     }
 
     provideHover(doc: vscode.TextDocument, pos: vscode.Position, tok: vscode.CancellationToken): vscode.ProviderResult<vscode.Hover> {
